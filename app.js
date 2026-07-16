@@ -160,7 +160,7 @@ function dashboardHTML() {
 const TYPE_LABELS = {
   warmup: "Warm-up", challenge: "Challenge", case: "Real-World Case", reflection: "Reflection",
   creativity: "Creativity", logic_puzzle: "Logic Puzzle", decision: "Decision Scenario",
-  bias: "Bias Detection", observation: "Observation", boss: "Boss Battle",
+  bias: "Bias Detection", observation: "Observation", fluency: "Fluency", boss: "Boss Battle",
   calibration: "Calibration", review: "Review",
 };
 

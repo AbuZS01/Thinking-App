@@ -7,9 +7,9 @@ browser's `localStorage`, so it's fully private and works offline.
 
 ## What's in it
 
-- **Daily Quest** — 9 exercises a day (warm-up, challenge, real-world case,
+- **Daily Quest** — 10 exercises a day (warm-up, challenge, real-world case,
   reflection, creativity, logic puzzle, decision scenario, bias detection,
-  observation), pulled from a bank of 72 hand-written exercises and weighted
+  observation, fluency), pulled from a bank of 80 hand-written exercises and weighted
   toward whichever thinking frameworks you're weakest in.
 - **Weekly Boss Battle** — a multi-stage, no-perfect-answer scenario (business,
   history, cybersecurity, AI, ethics, economics) that rotates weekly across 9
@@ -21,7 +21,7 @@ browser's `localStorage`, so it's fully private and works offline.
 - **Thinking Toolbox** — 26 quick-reference tools (OODA loop, Five Whys, MECE,
   premortem, base rates, Occam's razor, and more).
 - **Leveling & Achievements** — an RPG-style level curve (1 → 100, with titles
-  from "Beginner Observer" to "Grand Strategist"), XP, streaks, and 20
+  from "Beginner Observer" to "Grand Strategist"), XP, streaks, and 24
   achievements.
 - **Calibration training** — auto-graded true/false questions answered with a
   confidence level (scored with a proper scoring rule, so honest confidence

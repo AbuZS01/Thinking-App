@@ -1288,3 +1288,78 @@ MTC_BOSS_BATTLES.push(
     ],
     xpBase: 100 }
 );
+
+/* ---------- Fluency: verbal generation & retrieval under pressure ---------- */
+
+MTC_QUEST_TYPES.push("fluency");
+
+MTC_ACHIEVEMENTS.push(
+  { id: "wordsmith", name: "Wordsmith", desc: "Complete 5 fluency exercises.", xp: 50,
+    rule: (s) => (s.typeCounts.fluency || 0) >= 5 }
+);
+
+MTC_EXERCISES.push(
+  { id: "fluency-1", type: "fluency", difficulty: 1, xpBase: 10, frameworks: ["divergent-thinking"],
+    title: "The Sixty-Second Sprint",
+    prompt: "Pick any object you can see right now. Set a 60-second timer and write about it without stopping — no backspace, no pauses, no judging. If you stall, write 'and and and' until words return. Go.",
+    hints: ["The only rule is motion: quality is banned for these 60 seconds.", "If you catch yourself rereading what you wrote, that's the editor interrupting the writer — eyes forward, keep typing.", "Stalling is normal; the 'and and and' trick keeps the motor running until retrieval catches up — the next word always comes."],
+    rubric: ["Wrote continuously for the full 60 seconds", "Never used backspace or rewrote anything", "Used a filler phrase instead of stopping when stalled", "Noticed (without obeying) the urge to edit mid-flow"],
+    modelAnswer: "There's no content to get right — success is purely mechanical: sixty seconds of forward motion. Most people discover they wrote far more than expected, and that at least one usable phrase appeared that deliberate effort wouldn't have produced.",
+    expertNote: "Freewriting works because generation and evaluation are competing processes — suppressing the judge for a fixed, safe interval is the most direct trainable fix for word-retrieval freeze." },
+
+  { id: "fluency-2", type: "fluency", difficulty: 1, xpBase: 15, frameworks: ["divergent-thinking", "convergent-thinking"],
+    title: "Plain Words Only",
+    prompt: "Rewrite this sentence using only words a 12-year-old knows, keeping the full meaning: 'We need to leverage cross-functional synergies to operationalize our strategic learnings and drive stakeholder alignment.'",
+    hints: ["Start by asking what the sentence actually claims happened or should happen — strip the costume before re-dressing it.", "Each jargon word hides a plain one: leverage=use, operationalize=actually do, alignment=agreement.", "A faithful plain version might be: 'The teams need to work together, use what we've learned, and get everyone to agree on the plan.' Shorter AND clearer is the goal."],
+    rubric: ["Identified what the sentence actually means before rewriting", "Every word in the rewrite is genuinely plain", "No meaning was lost (or you discovered there was little meaning to lose)", "The rewrite is shorter than the original"],
+    modelAnswer: "Something like: 'The teams should work together, use what we've learned, and get everyone to agree on the plan.' Often the exercise reveals the original said almost nothing — jargon frequently exists to disguise how little is being claimed.",
+    expertNote: "Translating jargon to plain speech is the Feynman Technique applied to language itself — if you can't say it simply, you haven't finished thinking it." },
+
+  { id: "fluency-3", type: "fluency", difficulty: 1, xpBase: 10, frameworks: ["meta-thinking", "divergent-thinking"],
+    title: "The Placeholder Drill",
+    prompt: "Write a short paragraph about your week. Every time a word won't come, do NOT stop — type a bracket describing it, like [the word for being tired but wired], and keep moving. When the paragraph is done, go back and fill the brackets.",
+    hints: ["The drill trains the separation: flow first, retrieval second.", "Make the placeholder descriptive — the description itself often summons the word before you even finish the bracket.", "When you return to fill brackets, notice how easily the words come without the sentence waiting on them — that ease is the whole lesson."],
+    rubric: ["Kept writing through every stall using brackets", "Placeholders described the missing word's meaning", "Filled the brackets afterwards", "Noticed retrieval was easier under no pressure"],
+    modelAnswer: "Success is procedural: a finished paragraph, brackets used at every stall, then filled. Most people find the 'missing' words arrive within seconds once the sentence no longer depends on them — proof the block was pressure, not vocabulary.",
+    expertNote: "This is how professional writers and simultaneous translators handle retrieval lag — decouple the pipeline, never let one missing token stall the stream." },
+
+  { id: "fluency-4", type: "fluency", difficulty: 1, xpBase: 10, frameworks: ["divergent-thinking", "pattern-recognition"],
+    title: "Twenty Associations",
+    prompt: "Starting from the word BRIDGE, write a chain of 20 word associations as fast as you can — each word sparked by the previous one, no filtering, nonsense welcome. Then look back: mark the most surprising jump.",
+    hints: ["Speed is the point; sense is optional. 'Bridge, river, bank, money...' — puns and sound-alikes count.", "If you stall, use the sound of the word (bridge → fridge) — phonetic jumps are legal and loosen the lexicon.", "The lookback matters: surprising jumps show your retrieval network taking paths your deliberate mind never books."],
+    rubric: ["Reached 20 words", "Did not censor or restart the chain", "Used at least one sound-based or 'silly' jump", "Identified the most surprising transition afterwards"],
+    modelAnswer: "Any 20-word chain succeeds. A typical one drifts through two or three semantic neighborhoods (bridge→river→boat... →card game→casino...) — that drift is your associative network warming up, which is precisely the machinery that fetches words while you type.",
+    expertNote: "Word-association fluency correlates with faster lexical access generally — it's the closest thing to a direct gym exercise for the retrieval system itself." },
+
+  { id: "fluency-5", type: "fluency", difficulty: 2, xpBase: 15, frameworks: ["divergent-thinking", "convergent-thinking"],
+    title: "Say It Three Ways",
+    prompt: "Take the idea 'the meeting was a waste of time' and express it three ways: (1) formally, for a report; (2) bluntly, to a friend; (3) as a vivid image or metaphor. Then pick which serves the idea best and say why.",
+    hints: ["Same meaning, three costumes — the skill is realizing you always have more than one way in.", "For the metaphor, ask what the experience FELT like: an hour in traffic? A film with no plot?", "The convergent step is real: 'best' depends on audience and goal — name the criterion before picking."],
+    rubric: ["Produced three genuinely different registers", "The metaphor version is concrete, not just 'very unproductive'", "Named a criterion before choosing the best", "Noticed that generating alternatives was easier than finding one 'perfect' phrasing"],
+    modelAnswer: "Example: (1) 'The meeting concluded without decisions or assigned actions.' (2) 'Two hours of my life I'm not getting back.' (3) 'It was a carousel — lots of motion, and we got off exactly where we got on.' Which is best depends on the reader — the report gets (1), the essay gets (3).",
+    expertNote: "Writers who seem effortlessly articulate are usually just fast at generating three options and picking one — training the trio directly beats waiting for the single right phrase to descend." },
+
+  { id: "fluency-6", type: "fluency", difficulty: 2, xpBase: 15, frameworks: ["first-principles-thinking", "meta-thinking"],
+    title: "Explain It to a Ten-Year-Old",
+    prompt: "Pick one thing from your work or studies that you handle every day. Explain it in three sentences a curious ten-year-old would follow — no field vocabulary allowed.",
+    hints: ["Start from what the child already knows and build one step: 'You know how...?'", "Where you reach for a banned term, that's the exact spot your own understanding is leaning on a label instead of a mechanism.", "Analogies are your main tool — but check the analogy carries the true mechanism, not just a vibe."],
+    rubric: ["Three sentences, zero field vocabulary", "Built from something a child already knows", "The explanation carries the real mechanism, not just an image", "Noticed at least one spot where a label was hiding fuzzy understanding"],
+    modelAnswer: "Judged by the constraint, not the topic. The tell of success: you found at least one word you couldn't easily replace — which located the exact boundary of your real understanding. That discovery is worth more than the explanation.",
+    expertNote: "The Feynman Technique doubles as fluency training: plain-language constraints force active retrieval across your whole vocabulary instead of the same worn professional grooves." },
+
+  { id: "fluency-7", type: "fluency", difficulty: 2, xpBase: 15, frameworks: ["divergent-thinking", "convergent-thinking"],
+    title: "The Ugly First Draft",
+    prompt: "Think of a message you've been putting off writing (an email, a difficult text, a post). Write the deliberately BAD version here — clumsy, blunt, unpolished — as fast as possible. Then read it back and honestly mark what's already usable.",
+    hints: ["Giving yourself permission to write badly removes the exact pressure that was blocking you.", "Don't fix anything during the draft — badness is the assignment; fixing is a different activity for a different minute.", "On the read-back, most 'bad' drafts are 70% keepable — the blockage was never ability, it was the standard applied at the wrong stage."],
+    rubric: ["Actually wrote the dreaded message, start to finish", "Made no edits during the draft", "Marked the salvageable parts on read-back honestly", "Estimated what fraction was already usable"],
+    modelAnswer: "Success is a completed draft of a real message you'd been avoiding. The near-universal discovery: the ugly version is mostly fine, and fixing an existing draft takes a tenth of the energy that producing a 'perfect' one demanded.",
+    expertNote: "Every professional writing process separates drafting from revising — the amateur mistake isn't bad first drafts, it's demanding the first and final draft be the same document." },
+
+  { id: "fluency-8", type: "fluency", difficulty: 1, xpBase: 10, frameworks: ["meta-thinking"],
+    title: "Speak First, Then Type",
+    prompt: "Take any question from today's quest (or 'how was your week?'). Answer it OUT LOUD first — actually speak, to the room or under your breath. Then type what you said. Compare: was speaking easier than typing cold would have been?",
+    hints: ["Speech retrieval and typing retrieval run on different rails — most people's spoken fluency is years ahead of their typed fluency.", "Don't compose while speaking; just answer like a person, then transcribe the good parts.", "If speaking was noticeably easier, you've found a permanent tool: draft by voice (or voice notes) whenever typing stalls."],
+    rubric: ["Actually spoke the answer aloud before typing", "Transcribed what was said rather than rewriting from scratch", "Compared the ease of the two honestly", "Identified whether voice-first should become a personal tool"],
+    modelAnswer: "Most people find the spoken version came easier and sounded more natural — decades of conversation built that fluency. The practical takeaway: when typing stalls, switch channels; dictation or a voice note produces a draft your hands can then edit.",
+    expertNote: "This is Rubber Ducking pointed at fluency instead of debugging: verbalizing recruits a stronger retrieval pathway, and the transcript smuggles that strength onto the page." }
+);
