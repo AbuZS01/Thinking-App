@@ -8,6 +8,32 @@ let calUI = null; // {queue, idx, responses, results}
 let revUI = null; // {queue, idx, revealed, xp, count}
 let toolboxFilter = "";
 let frameworksFilter = "";
+let journalFilter = "";
+
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+let activeRec = null;
+
+const OUTLINES = {
+  warmup: "First instinct:\n\nAlternative explanations:\n- ",
+  challenge: "First-order effect:\n\nSecond-order effects:\n- \n\nWhat would change my mind:\n",
+  case: "What actually happened (mechanism):\n\nWhy it seemed rational at the time:\n\nGeneral lesson:\n",
+  reflection: "The specific case:\n\nWhat it shows about my thinking:\n\nWhat I'd do differently:\n",
+  creativity: "Ideas (no judging yet):\n1. \n2. \n3. \n\nBest one and why:\n",
+  logic_puzzle: "Given facts:\n\nStep by step:\n\nAnswer:\n",
+  decision: "Options:\n- \nCriteria:\n- \nDecision and why:\n\nWhat would change my mind:\n",
+  bias: "The bias:\n\nHow it operates here:\n\nThe fix:\n",
+  observation: "What it claims:\n\nWhat's missing:\n\nWhat I'd check:\n",
+};
+
+const BOSS_OUTLINE = "The system and its loops:\n\nOptions and trade-offs:\n\nMy decision:\n\nPre-mortem (two most likely failure modes):\n1. \n2. \n\nLeading indicators to watch:\n";
+
+const CHANGE_MIND_TYPES = ["challenge", "case", "decision", "bias", "observation"];
+
+const BOSS_FINAL_STAGE = {
+  question: "Commit to a decision. Pre-mortem its two most likely failure modes, and name the leading indicators that would tell you within weeks that you chose wrong.",
+  considerations: "A decision without a monitoring plan is a bet you'll never learn from. Good leading indicators are observable soon, not at the post-mortem. If you can't name a failure mode, you haven't red-teamed your own choice yet.",
+};
+const BOSS_MONITOR_RUBRIC = "I committed to ONE decision, wrote the two most likely ways it fails, and named early signs that would tell me I chose wrong";
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -147,6 +173,11 @@ function dashboardHTML() {
       : weak.map((w) => `<div class="weak-row"><span class="name">${esc(w.name)}</span><div class="weak-meter"><div class="fill" style="width:${Math.round(w.avg)}%"></div></div><span class="subtle">${Math.round(w.avg)}%</span></div>`).join("")}
   </div>
 
+  <div class="panel">
+    <h2>Skill Tracks</h2>
+    ${MTC.skillTracks(STATE).map((t) => `<div class="weak-row"><span class="name">${esc(t.name)}</span><div class="weak-meter"><div class="fill" style="width:${t.pct}%"></div></div><span class="subtle" style="width:52px">Lv ${t.level}</span></div>`).join("")}
+  </div>
+
   <div class="grid tight">
     <a class="panel card" href="#/journal"><h2>Journal</h2><p class="subtle">${STATE.history.length} answer${STATE.history.length === 1 ? "" : "s"}</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/toolbox"><h2>Toolbox</h2><p class="subtle">${MTC_TOOLBOX.length} thinking tools</p><span class="cta">Open &rarr;</span></a>
@@ -213,7 +244,7 @@ function exerciseHTML(id) {
   }
 
   if (!exUI || exUI.exerciseId !== id) {
-    exUI = { exerciseId: id, hintsRevealed: 0, checked: new Set(), showAssessment: false, draft: "" };
+    exUI = { exerciseId: id, hintsRevealed: 0, checked: new Set(), showAssessment: false, draft: "", confidence: 70 };
   }
 
   const hintsHTML = ex.hints.slice(0, exUI.hintsRevealed).map((h) => `<div class="hint-box">${esc(h)}</div>`).join("");
@@ -225,6 +256,10 @@ function exerciseHTML(id) {
   if (!exUI.showAssessment) {
     const ready = exUI.draft.trim().length >= 20;
     assessmentHTML = `<div class="field">
+      <label class="subtle" for="ex-confidence">Before revealing &mdash; how confident are you that your answer covers the key points? <b id="ex-conf-val">${exUI.confidence}</b>%</label>
+      <input type="range" id="ex-confidence" min="0" max="100" value="${exUI.confidence}" />
+    </div>
+    <div class="field">
       <button class="btn" data-show-assessment ${ready ? "" : "disabled"}>Done &mdash; reveal model answer</button>
       <p class="subtle" data-gate-note ${ready ? 'style="display:none"' : ""}>Write your attempt above first &mdash; it unlocks the model answer.</p>
     </div>`;
@@ -235,7 +270,7 @@ function exerciseHTML(id) {
     assessmentHTML = `
       <div class="panel">
         <h2>Self-Assessment</h2>
-        <p class="subtle">Check what you actually did &mdash; it sets your XP.</p>
+        <p class="subtle">Tick only what you truly did &mdash; if unsure, leave it unchecked. Strict grading is the training.</p>
         ${ex.rubric.map((r, i) => `<label class="rubric-item"><input type="checkbox" data-rubric-idx="${i}" ${exUI.checked.has(i) ? "checked" : ""}/> <span>${esc(r)}</span></label>`).join("")}
         <div class="model-answer"><div class="lbl">Model Answer</div>${esc(ex.modelAnswer)}</div>
         <div class="model-answer"><div class="lbl">Expert Note</div>${esc(ex.expertNote)}</div>
@@ -244,11 +279,20 @@ function exerciseHTML(id) {
       </div>`;
   }
 
+  const similar = MTC.lastSimilarAnswer(STATE, id);
+  const tools = `<div class="field draft-tools">
+      ${OUTLINES[ex.type] ? `<button class="btn ghost" data-outline="${ex.type}">Insert outline</button>` : ""}
+      ${SpeechRec ? `<button class="btn ghost" data-mic="ex-draft">&#127908; Dictate</button>` : ""}
+    </div>`;
   return header + `<div class="panel">
     <textarea id="ex-draft" placeholder="Write your answer &mdash; saved to your journal on submit.">${esc(exUI.draft)}</textarea>
+    ${CHANGE_MIND_TYPES.includes(ex.type) ? `<p class="subtle" style="margin-top:6px">End with: what evidence would change your mind?</p>` : ""}
+    ${tools}
     <div class="field">${hintBtn}</div>
     ${hintsHTML}
-  </div>${assessmentHTML}`;
+  </div>
+  ${similar ? `<details class="panel past-answer"><summary class="subtle">Your last answer on a similar problem &mdash; ${esc(similar.title)} (${esc(similar.record.date)})</summary><div class="journal-answer">${esc(similar.record.answer)}</div></details>` : ""}
+  ${assessmentHTML}`;
 }
 
 /* ---------- Boss Battle ---------- */
@@ -270,18 +314,23 @@ function bossHTML() {
   }
 
   if (!bossUI || bossUI.battleId !== battle.id) {
-    bossUI = { battleId: battle.id, hintsShown: new Set(), checked: new Set(), showResolution: false, draft: "" };
+    bossUI = { battleId: battle.id, consShown: {}, checked: new Set(), showResolution: false, draft: "" };
   }
-  const rubric = battle.rubric;
+  const rubric = [...battle.rubric, BOSS_MONITOR_RUBRIC];
 
-  const stagesHTML = battle.stages.map((s, i) => `
+  const allStages = [...battle.stages, BOSS_FINAL_STAGE];
+  const stagesHTML = allStages.map((s, i) => {
+    const cues = s.considerations.split(/(?<=\.)\s+/);
+    const shown = bossUI.consShown[i] || 0;
+    const isFinal = i === allStages.length - 1;
+    return `
     <div class="stage">
-      <h2>Stage ${i + 1}</h2>
+      <h2>${isFinal ? "Final Stage &mdash; Decide &amp; Monitor" : `Stage ${i + 1}`}</h2>
       <p>${esc(s.question)}</p>
-      ${bossUI.hintsShown.has(i)
-        ? `<div class="hint-box">${esc(s.considerations)}</div>`
-        : `<button class="btn ghost" data-boss-hint="${i}">Show considerations</button>`}
-    </div>`).join("");
+      ${cues.slice(0, shown).map((c) => `<div class="hint-box">${esc(c)}</div>`).join("")}
+      ${shown < cues.length ? `<button class="btn ghost" data-boss-hint="${i}">Show a consideration (${shown}/${cues.length})</button>` : ""}
+    </div>`;
+  }).join("");
 
   let resolutionHTML = "";
   if (!bossUI.showResolution) {
@@ -296,6 +345,7 @@ function bossHTML() {
     const scorePreview = MTC.rubricScore(checkedCount, total);
     resolutionHTML = `<div class="panel">
       <h2>Self-Assessment</h2>
+      <p class="subtle">Tick only what you truly did &mdash; if unsure, leave it unchecked.</p>
       ${rubric.map((r, i) => `<label class="rubric-item"><input type="checkbox" data-boss-rubric-idx="${i}" ${bossUI.checked.has(i) ? "checked" : ""}/> <span>${esc(r)}</span></label>`).join("")}
       <div class="model-answer"><div class="lbl">Expert Framing (no perfect answer)</div>${esc(battle.noPerfectAnswerNote)}</div>
       <p style="margin-top:12px">Self-assessed score: <b>${scorePreview}%</b> &middot; est. XP: <b>${MTC.estimateXp(battle.xpBase, scorePreview, 0)}</b></p>
@@ -311,6 +361,10 @@ function bossHTML() {
   </div>
   <div class="panel">
     <textarea id="boss-draft" placeholder="Work through your reasoning &mdash; saved to your journal on submit.">${esc(bossUI.draft)}</textarea>
+    <div class="field draft-tools">
+      <button class="btn ghost" data-outline="boss">Insert outline</button>
+      ${SpeechRec ? `<button class="btn ghost" data-mic="boss-draft">&#127908; Dictate</button>` : ""}
+    </div>
     ${resolutionHTML}
   </div>`;
 }
@@ -392,9 +446,11 @@ function calibrationLandingHTML() {
     : `<p class="subtle">${st.binaryCount} statements &middot; ${st.accuracy}% correct at ${st.avgConfidence}% average confidence${st.intervalCount ? ` &middot; ranges: ${st.intervalHitRate}% hit (target 90%)` : ""}</p>
        ${st.buckets.filter((b) => b.n > 0).map((b) => `
          <div class="weak-row"><span class="name">Said ${b.label}</span><div class="weak-meter"><div class="fill" style="width:${b.actual}%"></div></div><span class="subtle">right ${b.actual}% (${b.n})</span></div>`).join("")}`;
+  const exGap = MTC.exerciseConfidenceGap(STATE);
   return `<div class="panel">
     <h1>Calibration</h1>
     <p class="subtle">Auto-graded &mdash; no honor system. Honest confidence earns the most XP; overconfidence is penalized.</p>
+    ${exGap ? `<p class="subtle">Daily exercises: your pre-reveal confidence differs from your rubric score by <b>${exGap.gap}</b> points on average (${exGap.n} exercise${exGap.n === 1 ? "" : "s"}).</p>` : ""}
   </div>
   <div class="panel">
     <h2>Your calibration</h2>
@@ -506,21 +562,29 @@ function reportHTML() {
     ${row("Review sessions", r.current.reviewSessions, r.previous.reviewSessions)}
     ${row("Boss battles", r.current.bosses, r.previous.bosses)}
   </div>
-  ${r.focus ? `<div class="panel"><h2>Suggested focus</h2><p><i>${esc(r.focus.name)}</i> is your weakest framework &mdash; ${Math.round(r.focus.avg)}% average over ${r.focus.attempts} attempt${r.focus.attempts === 1 ? "" : "s"}. Daily quests will favor it until it improves.</p></div>` : ""}`;
+  ${r.focus ? `<div class="panel"><h2>Suggested focus</h2><p><i>${esc(r.focus.name)}</i> is your weakest framework &mdash; ${Math.round(r.focus.avg)}% average over ${r.focus.attempts} attempt${r.focus.attempts === 1 ? "" : "s"}. Daily quests will favor it until it improves.</p>
+  <p><b>Field assignment:</b> apply ${esc(r.focus.name)} to one real decision this week, and write what happened in that exercise's answer box when it next appears.</p></div>` : ""}`;
 }
 
 /* ---------- Journal ---------- */
 
-function journalHTML() {
-  const entries = STATE.history.filter((h) => h.type !== "review" && h.type !== "calibration").slice(-100).reverse();
-  const header = `<div class="panel">
-    <h1>Journal</h1>
-    <p class="subtle">Your answers, newest first.</p>
-  </div>`;
+function journalResultsHTML() {
+  const q = journalFilter.toLowerCase();
+  const entries = STATE.history
+    .filter((h) => h.type !== "review" && h.type !== "calibration")
+    .filter((h) => {
+      if (!q) return true;
+      const isBoss = h.type === "boss";
+      const def = isBoss ? MTC.getBossBattleDef(h.exerciseId) : MTC.getExercise(h.exerciseId);
+      const title = def ? (isBoss ? def.name : def.title) : h.exerciseId;
+      return (title + " " + (h.answer || "") + " " + h.type).toLowerCase().includes(q);
+    })
+    .slice(-100)
+    .reverse();
   if (entries.length === 0) {
-    return header + `<div class="panel"><p class="subtle">Complete an exercise and your answer will appear here.</p></div>`;
+    return `<div class="panel"><p class="subtle">${journalFilter ? "No entries match." : "Complete an exercise and your answer will appear here."}</p></div>`;
   }
-  return header + entries.map((h) => {
+  return entries.map((h) => {
     const isBoss = h.type === "boss";
     const def = isBoss ? MTC.getBossBattleDef(h.exerciseId) : MTC.getExercise(h.exerciseId);
     const title = def ? (isBoss ? def.name : def.title) : h.exerciseId;
@@ -533,6 +597,14 @@ function journalHTML() {
   }).join("");
 }
 
+function journalHTML() {
+  return `<div class="panel">
+    <h1>Journal</h1>
+    <input type="text" id="journal-search" placeholder="Search your answers..." value="${esc(journalFilter)}" />
+  </div>
+  <div id="journal-results">${journalResultsHTML()}</div>`;
+}
+
 /* ---------- Result toast ---------- */
 
 function resultToastHTML(result) {
@@ -541,6 +613,7 @@ function resultToastHTML(result) {
       <div class="subtle">Exercise complete</div>
       <div class="xp-gain">+${result.xpAwarded} XP</div>
       ${result.leveledUp ? `<p>&#127881; Level up! You're now <b>Level ${result.newLevel}</b> &mdash; ${esc(MTC.titleForLevel(result.newLevel))}</p>` : ""}
+      ${result.missed && result.missed.length ? `<div class="unlock" style="text-align:left"><b>Focus next time:</b>${result.missed.map((m) => `<div>&middot; ${esc(m)}</div>`).join("")}</div>` : ""}
       ${result.achievementsUnlocked.length ? result.achievementsUnlocked.map((a) => `<div class="unlock">&#127942; Achievement unlocked: <b>${esc(a.name)}</b> (+${a.xp} XP)</div>`).join("") : ""}
       <div class="field"><button class="btn" data-dismiss-result>Continue</button></div>
     </div>
@@ -590,7 +663,8 @@ document.addEventListener("click", (e) => {
   if (e.target.closest("[data-submit-exercise]")) {
     const ex = MTC.getExercise(exUI.exerciseId);
     const score = MTC.rubricScore(exUI.checked.size, ex.rubric.length);
-    const result = MTC.submitExercise(STATE, exUI.exerciseId, score, exUI.hintsRevealed, exUI.draft);
+    const result = MTC.submitExercise(STATE, exUI.exerciseId, score, exUI.hintsRevealed, exUI.draft, exUI.confidence);
+    result.missed = ex.rubric.filter((r, i) => !exUI.checked.has(i)).slice(0, 3);
     pendingResult = result;
     exUI = null;
     render();
@@ -599,7 +673,7 @@ document.addEventListener("click", (e) => {
 
   if (e.target.closest("[data-boss-hint]")) {
     const idx = Number(e.target.closest("[data-boss-hint]").dataset.bossHint);
-    bossUI.hintsShown.add(idx);
+    bossUI.consShown[idx] = (bossUI.consShown[idx] || 0) + 1;
     render();
     return;
   }
@@ -609,7 +683,7 @@ document.addEventListener("click", (e) => {
   const submitBoss = e.target.closest("[data-submit-boss]");
   if (submitBoss) {
     const battleId = submitBoss.dataset.submitBoss;
-    const rubric = MTC.getBossBattleDef(battleId).rubric;
+    const rubric = [...MTC.getBossBattleDef(battleId).rubric, BOSS_MONITOR_RUBRIC];
     const score = MTC.rubricScore(bossUI.checked.size, rubric.length);
     const result = MTC.submitBossBattle(STATE, battleId, score, bossUI.draft);
     pendingResult = result;
@@ -695,6 +769,50 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  const outlineBtn = e.target.closest("[data-outline]");
+  if (outlineBtn) {
+    const key = outlineBtn.dataset.outline;
+    const targetId = key === "boss" ? "boss-draft" : "ex-draft";
+    const template = key === "boss" ? BOSS_OUTLINE : OUTLINES[key];
+    const ta = document.getElementById(targetId);
+    if (ta && template) {
+      ta.value = ta.value.trim() ? ta.value + "\n\n" + template : template;
+      ta.dispatchEvent(new Event("input", { bubbles: true }));
+      ta.focus();
+    }
+    return;
+  }
+
+  const micBtn = e.target.closest("[data-mic]");
+  if (micBtn && SpeechRec) {
+    if (activeRec) {
+      activeRec.stop();
+      return;
+    }
+    const targetId = micBtn.dataset.mic;
+    const rec = new SpeechRec();
+    rec.continuous = true;
+    rec.interimResults = false;
+    activeRec = rec;
+    micBtn.textContent = "\u23F9 Stop dictating";
+    rec.onresult = (ev) => {
+      const ta = document.getElementById(targetId);
+      if (!ta) return;
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        if (ev.results[i].isFinal) ta.value = (ta.value ? ta.value + " " : "") + ev.results[i][0].transcript.trim();
+      }
+      ta.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    rec.onend = () => {
+      activeRec = null;
+      const btn = document.querySelector(`[data-mic="${targetId}"]`);
+      if (btn) btn.innerHTML = "&#127908; Dictate";
+    };
+    rec.onerror = rec.onend;
+    try { rec.start(); } catch (err) { activeRec = null; }
+    return;
+  }
+
   if (e.target.closest("[data-export-progress]")) {
     const blob = new Blob([MTC.exportStateJSON()], { type: "application/json" });
     const a = document.createElement("a");
@@ -773,6 +891,18 @@ document.addEventListener("input", (e) => {
   if (e.target.id === "boss-draft") {
     if (bossUI) bossUI.draft = e.target.value;
     toggleGate("[data-boss-show-resolution]", e.target.value);
+    return;
+  }
+  if (e.target.id === "ex-confidence") {
+    if (exUI) exUI.confidence = Number(e.target.value);
+    const val = document.getElementById("ex-conf-val");
+    if (val) val.textContent = e.target.value;
+    return;
+  }
+  if (e.target.id === "journal-search") {
+    journalFilter = e.target.value;
+    const box = document.getElementById("journal-results");
+    if (box) box.innerHTML = journalResultsHTML();
     return;
   }
   if (e.target.id === "cal-conf") {

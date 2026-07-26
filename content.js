@@ -357,7 +357,7 @@ const MTC_EXERCISES = [
     title: "The Missing Menu Item",
     prompt: "A restaurant removes its cheapest item from the menu and changes nothing else. Within a month, average order value rises noticeably. Write your first-instinct explanation. Then write one alternative explanation that has nothing to do with the removed item.",
     hints: ["Consider what the cheap item was doing for the *other* prices, not just for itself.", "This resembles decoy pricing/anchoring: the cheap item made everything else look reasonable by comparison — removing it can shift what people compare prices to.", "A plausible non-pricing explanation: fewer solo/budget diners that month, a promotion running, or seasonal demand — a single month of data can't rule these out."],
-    rubric: ["Wrote down a first instinct before over-reasoning", "Considered anchoring/decoy pricing as a mechanism", "Generated a genuinely unrelated alternative explanation", "Avoided declaring one cause 'confirmed' from one month of data"],
+    rubric: ["I wrote my gut-instinct explanation before analysing", "I explained HOW removing the cheap dish could make people spend more (it changed the prices customers compare against)", "I gave a second explanation that has nothing to do with the menu change (season, promotion, different crowd)", "I did not treat one month of data as proof"],
     modelAnswer: "Removing a cheap 'decoy' item can shift the anchor customers use, so mid-priced items look better by comparison and people trade up. But the same result could come from a promotion, seasonality, or a shift in who dined that month — one month of data supports a hypothesis, not a conclusion.",
     expertNote: "The pricing story is attractive because it's simple and pins the change on one decision — exactly why it needs to be checked against alternatives, not accepted on elegance alone." },
 
@@ -365,7 +365,7 @@ const MTC_EXERCISES = [
     title: "Two Headlines",
     prompt: "Headline A: 'Study finds coffee drinkers live longer.' Headline B: 'Study finds people who live longer drink more coffee.' In 2-3 sentences, explain whether these are the same claim.",
     hints: ["Which variable is doing the explaining, and which is being explained, in each sentence?", "A is a causal claim (coffee → longevity). B only notes a correlation, with no claimed direction.", "Healthier, more socially active people may simply drink more coffee — that's reverse causation, not coffee's effect."],
-    rubric: ["Identified A as causal phrasing and B as correlational phrasing", "Named at least one plausible reverse-causation story", "Named at least one confounder (income, social activity, health status)", "Didn't treat the two headlines as interchangeable"],
+    rubric: ["I spotted that headline A says coffee CAUSES longer life, while B only says the two go together", "I gave a story where the arrow points the other way (healthier people happen to drink more coffee)", "I named a third factor that could drive both (like income or social life)", "I said clearly that the two headlines make different claims"],
     modelAnswer: "They are not the same claim. A asserts coffee causes longer life. B only reports a correlation — it's equally consistent with healthier or more social people simply drinking more coffee (reverse causation), or a third factor like income driving both.",
     expertNote: "Journalists routinely convert 'correlated with' into causal headlines because causal claims are more clickable — the underlying study rarely supports the stronger claim." },
 
@@ -373,7 +373,7 @@ const MTC_EXERCISES = [
     title: "Calibrate Your Guess",
     prompt: "Without looking it up: give a 90% confidence range (a low and high number) for the population of Indonesia. Write both numbers down before reading the hint.",
     hints: ["A 90% interval should be wide enough that you'd only be wrong about 1 time in 10 — most people's first guess is far too narrow.", "If you're not sure, widen both ends further than feels comfortable before locking it in.", "Indonesia's population is roughly 280 million (2024 estimate) — check whether your range actually contained it."],
-    rubric: ["Committed to a range before seeing the answer", "Range was wide enough to reflect genuine uncertainty, not false precision", "Honestly checked whether the true value fell inside the range", "Reflected on whether your intervals are usually too narrow"],
+    rubric: ["I locked in my low and high numbers before reading the answer", "I made the range wide enough to honestly show my uncertainty, not to look smart", "I checked whether about 280 million actually fell inside my range", "I thought about whether my ranges are usually too narrow"],
     modelAnswer: "Most people guess a range like 150–250 million and miss high, because Indonesia's population (~280M, 4th largest in the world) is undersold in most people's mental map. The exercise isn't about this one fact — it's about noticing whether your 90% ranges actually catch the truth 90% of the time.",
     expertNote: "Well-calibrated forecasters are defined by this exact property: their 90% intervals are right about 90% of the time — no more, no less." },
 
@@ -381,7 +381,7 @@ const MTC_EXERCISES = [
     title: "Spot the Hidden Assumption",
     prompt: "'We should hire more salespeople to increase revenue.' List two assumptions hidden inside this sentence that aren't stated outright.",
     hints: ["What would have to be true about the sales team's current workload for more hires to help at all?", "One hidden assumption: sales capacity, not demand or lead generation, is the bottleneck.", "Another: the new hires will be as productive as existing ones, with no ramp-up cost or diluted lead pool."],
-    rubric: ["Named the capacity-is-the-bottleneck assumption", "Named a second, distinct hidden assumption", "Explained why each assumption matters to the conclusion", "Avoided just restating the sentence without unpacking it"],
+    rubric: ["I spotted the hidden assumption that sales staff (not demand or leads) is what limits revenue", "I found a second, different hidden assumption (e.g. new hires perform as well as current ones)", "I explained how the advice fails if each assumption is wrong", "I did more than reword the original sentence"],
     modelAnswer: "Hidden assumptions include: (1) the sales team's headcount, not demand/lead supply/pricing, is the actual constraint on revenue; (2) new hires will reach full productivity quickly rather than diluting existing leads or taking months to ramp.",
     expertNote: "'Hire more X to get more Y' statements almost always assume X is the bottleneck — checking that assumption first is cheaper than hiring and finding out it wasn't." },
 
@@ -390,7 +390,7 @@ const MTC_EXERCISES = [
     title: "The Subscription Cliff",
     prompt: "A SaaS company converts 15% of trial users to paid (industry average: 8%). Leadership wants to cut the trial from 14 to 7 days to 'accelerate the funnel.' Map at least two rounds of consequences: the first-order effect, then what that effect itself causes next.",
     hints: ["First-order: does a shorter trial change who converts, or just when?", "Consider selection effects — a 7-day trial may filter out users who need longer to see value, changing the mix of who converts.", "Second-order: if the users who now convert are less certain/informed, what happens to churn and support cost a few months later?"],
-    rubric: ["Stated a clear first-order effect (not just 'conversion changes')", "Traced at least one second-order consequence downstream of the first", "Considered selection effects on *who* converts, not just how many", "Considered a metric beyond conversion rate (churn, support cost, LTV)"],
+    rubric: ["I named a specific immediate effect (e.g. people who need more than 7 days stop converting)", "I then asked 'and what does THAT cause?' and wrote the next effect", "I considered how the TYPE of customer changes, not just the number", "I looked past sign-ups to later numbers (cancellations, support load)"],
     modelAnswer: "First-order: shorter trials may lower the conversion rate itself, since some users need more than 7 days to reach an 'aha' moment. Second-order: even if conversion rate holds, the users who convert quickly may be lower-intent or evaluating less thoroughly, raising churn and support load months later — the funnel got faster but the customer base got shakier.",
     expertNote: "The mistake isn't ignoring first-order effects, it's stopping there — the real risk in this decision shows up two steps downstream, in retention data leadership won't see for months." },
 
@@ -398,7 +398,7 @@ const MTC_EXERCISES = [
     title: "Red Team the Instant Transfer",
     prompt: "A bank launches instant peer-to-peer transfers with no confirmation delay. As a red-teamer, name three ways this could be abused, then propose the single control that would block the most abuse paths with the least friction for legitimate users.",
     hints: ["Think about what a delay or confirmation step currently prevents that instant transfer removes.", "Abuse patterns often involve social engineering ('send this back, wrong account') exploiting irreversibility.", "The best control usually targets the moment of highest leverage (e.g. first transfer to a new recipient) rather than adding friction everywhere."],
-    rubric: ["Named at least three distinct abuse vectors, not variations of one", "Considered social-engineering/scam vectors, not just technical exploits", "Proposed a control targeted at the highest-leverage point", "Weighed the friction cost to legitimate users, not just security"],
+    rubric: ["I listed three genuinely different ways criminals could abuse it", "At least one abuse tricks a person, not a computer", "My fix targets the riskiest moment (like the first payment to someone new) instead of slowing everything", "I weighed how much my fix annoys honest users"],
     modelAnswer: "Abuse vectors: (1) scam artists pressuring victims into instant irreversible transfers, (2) account-takeover fraud cashing out before detection, (3) money-mule chains moving stolen funds faster than fraud systems can flag them. The highest-leverage, lowest-friction control: add a short delay or extra confirmation only on transfers to a brand-new recipient, not on every transfer — this targets exactly the pattern common to all three abuse paths while leaving repeat transfers (the vast majority of legitimate volume) instant.",
     expertNote: "Good red-teaming doesn't just list threats — it ranks controls by how much abuse they block per unit of friction imposed on real users." },
 
@@ -406,7 +406,7 @@ const MTC_EXERCISES = [
     title: "The Diwan Reform",
     prompt: "After rapid territorial expansion, Caliph Umar ibn al-Khattab established the diwan — a formal register tracking who was owed what stipend from the growing state treasury, replacing ad-hoc distribution. What systemic problem was this solving, and what systems-thinking principle does it illustrate?",
     hints: ["What happens to an informal distribution system when the population and territory it serves grows an order of magnitude?", "Informal systems that worked at small scale often break — not gradually, but suddenly — past a certain scale threshold.", "The diwan replaced ad-hoc judgment with a formal, auditable structure — a classic 'formalize the feedback loop before it breaks' move."],
-    rubric: ["Identified the scaling problem (informal systems failing past a size threshold)", "Named the systems-thinking principle (formalizing structure/feedback before collapse)", "Connected the historical example to a general, transferable insight", "Avoided treating it as just a historical fact with no generalizable lesson"],
+    rubric: ["I explained why 'just remembering who gets what' breaks when the group gets huge", "I named the lesson: build formal systems BEFORE the informal one breaks", "I connected it to a modern example (like a fast-growing company)", "I treated it as a transferable lesson, not just a history fact"],
     modelAnswer: "Ad-hoc distribution works when the group and treasury are small enough for informal judgment and memory to track who is owed what fairly. Rapid expansion broke that assumption — the diwan formalized the tracking system before the informal one failed visibly and unfairly. The general principle: systems that rely on informal coordination need to be replaced with formal structure *before* they hit the scale where they silently start producing unfair or inconsistent outcomes, not after.",
     expertNote: "The same pattern shows up in fast-growing companies: the informal 'ask around' processes that worked at 20 people produce silent unfairness at 200, and the fix is structural, not effort." },
 
@@ -414,7 +414,7 @@ const MTC_EXERCISES = [
     title: "The A/B Test That Lied",
     prompt: "A marketing team runs an A/B test for 3 hours, sees Variant B up 40%, and ships it immediately. What's wrong here from a scientific-thinking standpoint, and what would you require before trusting the result?",
     hints: ["What sample size and time window is likely represented by 3 hours of traffic?", "Early results in any test tend to swing wildly before settling — this is variance, not signal, at small sample sizes.", "A pre-registered minimum sample size and duration (accounting for day-of-week effects) should be set *before* the test starts, not decided by when the result looks good."],
-    rubric: ["Identified the sample size / duration problem specifically, not just 'it's too fast'", "Explained why early results are noisier (high variance at low N)", "Proposed a concrete safeguard (pre-registered sample size/duration or significance threshold)", "Noted the risk of stopping a test early *because* the result looked favorable (this itself is a bias)"],
+    rubric: ["I said specifically that 3 hours means too few visitors to trust", "I explained that small samples swing wildly by pure luck", "I proposed a rule set BEFORE the test starts (how many visitors, how many days)", "I spotted the trap of stopping a test early because you like the result"],
     modelAnswer: "Three hours is very likely too small a sample to distinguish a real 40% effect from random noise, and stopping exactly when the result looks good (rather than at a pre-set time) introduces a bias toward false positives. Before trusting it, the team should have pre-registered a minimum sample size and run duration (spanning at least a full day/week cycle) and a significance threshold, decided before seeing any results.",
     expertNote: "'Peeking' at a test and stopping when it looks good is one of the most common ways rigorous-looking experiments produce false winners — the fix is deciding the stopping rule in advance." },
 
@@ -423,7 +423,7 @@ const MTC_EXERCISES = [
     title: "Kodak and the Digital Camera",
     prompt: "Kodak's own engineer invented the first digital camera in 1975. Kodak shelved it, fearing it would cannibalize film sales, and filed for bankruptcy in 2012 as digital photography took over. Analyze: what would first-principles thinking have suggested Kodak do differently, and what second-order consequence did they fail to trace from protecting film sales?",
     hints: ["First principles: what was Kodak's business actually about — selling film, or capturing memories?", "If they define their business around the film format, protecting film sales looks rational; if around 'capturing memories,' digital is an opportunity, not a threat.", "Second-order: protecting film sales today meant leaving digital camera innovation to competitors, who then owned the format that eventually killed film anyway."],
-    rubric: ["Reframed the business at the first-principles level (memories, not film)", "Explained why protecting film sales seemed rational in the short term", "Traced the second-order consequence: ceding the future format to competitors", "Drew a generalizable lesson, not just a historical judgment"],
+    rubric: ["I redefined Kodak's real business as 'capturing memories', not 'selling film'", "I explained why protecting film profits looked sensible at the time", "I traced the knock-on effect: rivals got to own digital because Kodak wouldn't touch it", "I wrote a lesson that applies beyond Kodak"],
     modelAnswer: "From first principles, Kodak's actual business was helping people capture and keep memories — film was just the current technology for doing that, not the goal itself. Defining the business as 'film' made protecting film sales look like the obviously rational first-order move. But the second-order consequence: by not developing digital, Kodak ceded the emerging format to competitors (and later, phone makers) who then defined the future of the category Kodak once owned — the very thing they were trying to protect (their market position) was lost precisely because they protected the wrong thing (the format instead of the customer need).",
     expertNote: "Companies rarely die from failing to see a technology coming — Kodak invented it. They die from defining their business around the current format instead of the underlying need." },
 
@@ -431,7 +431,7 @@ const MTC_EXERCISES = [
     title: "The Maginot Line",
     prompt: "France built the Maginot Line — a heavily fortified defensive line — based on the trench-warfare lessons of WWI. In 1940, Germany simply went around it through the Ardennes forest. What pattern-recognition error does this illustrate, and what would scenario planning have added?",
     hints: ["The line was an excellent solution to a very specific problem: the previous war.", "This is 'fighting the last war' — pattern-matching to the most recent, most vivid conflict rather than the range of plausible next ones.", "Scenario planning would have asked 'what if the enemy doesn't repeat the last war's approach?' and built flexibility for more than one future, rather than one static, fully-committed defense."],
-    rubric: ["Named the specific pattern-recognition error (fighting the last war)", "Explained why the pattern felt like the safe, rational choice at the time", "Identified what scenario planning would have added (multiple futures, not one)", "Connected the historical case to a transferable principle about over-committing to one predicted future"],
+    rubric: ["I named the mistake: preparing for a repeat of the LAST war", "I explained why it felt safe and sensible at the time", "I said what planning for several different futures would have changed", "I wrote the general lesson about betting everything on one prediction"],
     modelAnswer: "This is a textbook 'fighting the last war' error: the Maginot Line perfectly solved WWI's trench-warfare problem, so it felt like rigorous, evidence-based planning — but it assumed the next war would look like the last one. Scenario planning would have built several plausible attack scenarios (including a mobile, blitzkrieg-style flanking move) and asked which defenses held up across *all* of them, rather than fully committing resources to a single, static answer to the previous conflict.",
     expertNote: "The line wasn't a stupid decision — it was a highly rational answer to the wrong question. That's what makes fighting the last war so dangerous: it looks like diligence." },
 
@@ -439,7 +439,7 @@ const MTC_EXERCISES = [
     title: "The 2008 Ratings",
     prompt: "In the run-up to 2008, mortgage-backed securities built from historically low-default loans received top ratings, because decades of past data showed housing prices 'never' fell nationally all at once. Explain the base-rate and survivorship-bias errors embedded in that reasoning.",
     hints: ["The 'decades of data' only covered a period when a nationwide simultaneous price fall hadn't yet happened — that's a sample that survived without the event, not proof it can't happen.", "Base rate error: treating 'hasn't happened in this sample' as 'has a near-zero probability' understates tail risk (see Black Swan thinking).", "Survivorship bias: the historical data available was drawn from a period that itself hadn't experienced the tail event being ruled out — the absence of the event in the sample doesn't mean the event is rare, it may mean the sample is short."],
-    rubric: ["Explained the specific base-rate error (short/lucky sample treated as full distribution)", "Explained the survivorship-bias framing (the observed data 'survived' without the tail event)", "Connected this to why the ratings were confidently wrong, not just wrong", "Drew a general lesson about historical data windows and rare correlated events"],
+    rubric: ["I explained the error: 'it never happened in our data' was read as 'it can't happen'", "I saw that the data looked safe only because the disaster hadn't happened YET in that window", "I explained why this made the ratings confidently wrong, not just wrong", "I wrote the general lesson about short history and rare disasters"],
     modelAnswer: "The models used a historical window in which nationwide housing prices had never fallen simultaneously — but that absence reflected the limited length of the sample, not a real impossibility (a base-rate error: treating 'not observed yet' as 'can't happen'). It's also a form of survivorship bias: the available data 'survived' without the correlated crash occurring, so models built on it were blind to exactly the tail risk that mattered most, and reported high confidence precisely where uncertainty was highest.",
     expertNote: "Confidently precise numbers built on too-short historical windows are a recurring pattern in financial crises — the precision is real, the underlying uncertainty about rare correlated events is not captured by it." },
 
@@ -447,7 +447,7 @@ const MTC_EXERCISES = [
     title: "Badr: Deciding Under Uncertainty",
     prompt: "Before the Battle of Badr, the small Muslim force (roughly 313) faced a much larger Meccan force. Before the battle, they moved to control the wells nearest the battlefield, denying the enemy easy water access while securing their own. Analyze this as a decision made under severe uncertainty and heavy resource asymmetry: what did controlling the water source actually change, strategically?",
     hints: ["When you're outnumbered, what kind of advantage matters most: overall strength, or the specific resource that shapes the battlefield?", "Controlling water access converts a resource disadvantage (numbers) into a positional advantage (the enemy must fight thirsty, on ground you chose).", "This is a real-options-style move: it doesn't guarantee victory, it changes the odds and the terms of engagement before the larger, less-reversible decision (the battle itself) has to be made."],
-    rubric: ["Identified that the move targeted a specific resource, not overall strength", "Explained how it converted numerical disadvantage into positional/terms-of-engagement advantage", "Framed it as improving odds under uncertainty, not guaranteeing an outcome", "Connected it to a general principle about controlling a key constrained resource when outmatched on raw strength"],
+    rubric: ["I saw the move was about controlling the water, not matching the enemy's size", "I explained how holding the wells forced the bigger army to fight on worse terms", "I framed it as improving the odds, not guaranteeing the win", "I wrote the general rule: when outmatched, change what the contest is decided by"],
     modelAnswer: "Outnumbered forces can't out-muscle a larger army directly, but they can change *which* resource the battle is fought over. Securing the wells converted a raw-numbers disadvantage into a positional one: the larger force now had to fight thirsty, on ground and terms chosen by the smaller side. It didn't guarantee the outcome — it improved the odds and shifted the terms of engagement before the irreversible commitment of battle, which is exactly the right target when you can't win on the enemy's chosen axis of comparison.",
     expertNote: "When you can't win on the dimension your opponent is strong in, the strategic move is to change which dimension the contest is actually decided on." },
 
@@ -456,7 +456,7 @@ const MTC_EXERCISES = [
     title: "A Belief You Changed",
     prompt: "Describe one belief you genuinely held a year or more ago that you've since changed because of evidence (not just because opinions drifted). What was the belief, what changed it, and how did it feel to update?",
     hints: ["It should be a belief you can state clearly, not a vague attitude.", "The change should be traceable to specific evidence or an argument, not just time passing.", "Notice whether you updated gradually as evidence accumulated, or resisted until one point forced a sudden change — both are normal, but worth noticing."],
-    rubric: ["Named a specific, falsifiable belief (not a vague value or mood)", "Identified the specific evidence/argument that changed it", "Reflected honestly on any resistance to updating", "Avoided picking a low-stakes belief that cost nothing to change"],
+    rubric: ["I named a real, specific belief (not a vague attitude)", "I named the exact evidence or argument that changed my mind", "I was honest about how much I resisted changing", "I picked a belief that actually cost me something to give up"],
     modelAnswer: "There's no single 'correct' answer here — this exercise is scored on honesty and specificity, not content. The strongest answers name a belief that was genuinely inconvenient to update (it cost something — pride, a past decision, a relationship) and describe the actual evidence that moved it.",
     expertNote: "The ability to state 'I used to believe X, and here's specifically what changed my mind' — on demand, about something that mattered — is one of the most reliable markers of genuine (vs. performative) open-mindedness.",
     flag: "mindChanged" },
@@ -465,7 +465,7 @@ const MTC_EXERCISES = [
     title: "Your Last Wrong Prediction",
     prompt: "Recall a specific prediction you made that turned out wrong (a forecast about an outcome, a person, a market, anything). Do a mini postmortem: what did you predict, what actually happened, and — critically — was your original reasoning bad, or was it good reasoning that lost to bad luck?",
     hints: ["Separate 'the process I used to decide' from 'the outcome that happened' — good process can still lose sometimes.", "Look for the actual point in your reasoning where you'd change something if you replayed it, not just 'I was wrong.'", "If you can't find anything you'd change in the process, the honest conclusion may be that it was bad luck, not bad thinking."],
-    rubric: ["Named a specific prediction and its actual outcome", "Distinguished process quality from outcome quality", "Identified a concrete point in the reasoning to revise (or honestly concluded there wasn't one)", "Avoided blanket self-criticism without a specific, actionable lesson"],
+    rubric: ["I named a specific prediction I made and what actually happened", "I separated 'was my thinking good?' from 'did it turn out well?'", "I found the exact step I'd change — or honestly concluded it was just bad luck", "I ended with a usable lesson, not just 'I was wrong'"],
     modelAnswer: "There's no single correct answer — this is scored on whether you separated process from outcome. A strong answer might conclude: 'the outcome was bad, but the reasoning was sound given what I knew — the lesson is about the amount of uncertainty I should have flagged, not the decision itself.'",
     expertNote: "Confusing outcome quality with decision quality is one of the most common reasoning errors — a good decision can produce a bad outcome, and vice versa, especially under real uncertainty." },
 
@@ -473,7 +473,7 @@ const MTC_EXERCISES = [
     title: "Where Ego Blocks Updating",
     prompt: "Think of a topic where you'd find it personally painful to be proven wrong (professionally, politically, or personally). Name the topic, and honestly describe what kind of evidence — if it appeared tomorrow — would actually change your mind.",
     hints: ["If you can't name any evidence that would change your mind, that's worth noticing directly — it may mean the belief is more identity than conclusion.", "Be specific: 'more data' is not an answer; 'if X specific thing happened, I'd update' is.", "Notice if your answer describes evidence that's conveniently impossible to obtain — that's a sign the belief is unfalsifiable as currently held."],
-    rubric: ["Named a specific topic with genuine personal stakes", "Specified concrete evidence that would change the belief, not vague generalities", "Honestly assessed whether that evidence is realistically obtainable", "Noticed (rather than avoided) any unfalsifiability in the current belief"],
+    rubric: ["I picked a topic where being wrong would genuinely hurt", "I named specific evidence that would change my mind (not just 'more data')", "I checked whether that evidence could realistically ever appear", "If NO evidence could change my mind, I admitted that openly"],
     modelAnswer: "There's no universal correct answer — the exercise is scored on specificity and honesty. The strongest responses name evidence precise enough that you could actually notice it happening in real life, and admit it if the belief turns out to be currently unfalsifiable.",
     expertNote: "A belief that no realistic evidence could change isn't really a conclusion — it's a commitment. Naming that distinction, in yourself, is rare and valuable." },
 
@@ -481,7 +481,7 @@ const MTC_EXERCISES = [
     title: "Outside Your Circle of Competence",
     prompt: "Recall a decision you made confidently on a topic outside your real expertise (investing, health, a technical field not your own, etc.). What signal, in hindsight, should have told you that you were outside your circle of competence at the time?",
     hints: ["Confidence and competence are different things — look for a moment where you felt certain despite having little actual basis for it.", "A common signal: not being able to explain the mechanism, only the conclusion.", "Another signal: dismissing a specialist's caveat because it complicated a simple story you preferred."],
-    rubric: ["Named a specific decision made outside real expertise", "Identified a concrete signal that should have flagged the boundary", "Distinguished confidence from actual competence in the reflection", "Connected it to how you'd catch this signal earlier next time"],
+    rubric: ["I named a confident decision I made outside what I really know", "I found the warning sign I ignored (like: I could state the conclusion but not explain WHY)", "I separated feeling confident from actually knowing", "I wrote how I'd catch that warning sign earlier next time"],
     modelAnswer: "There's no single correct answer — scored on specificity. A strong response identifies a concrete tell (e.g., 'I couldn't have explained the mechanism if asked, only repeated the conclusion') and a practical way to catch that tell earlier next time (e.g., a personal rule to seek a second opinion outside a defined competence area).",
     expertNote: "The circle of competence isn't about how much you know — it's about knowing where the edge is, which is a separate and rarer skill." },
 
@@ -490,7 +490,7 @@ const MTC_EXERCISES = [
     title: "Fifteen Uses",
     prompt: "In 5 minutes, list 15 uses for a paperclip that are NOT related to holding papers together. Don't evaluate ideas as you go — just generate.",
     hints: ["Quantity over quality at this stage — judging ideas while generating them kills fluency.", "Try changing one property at a time: its shape, its material (metal, conductive), its size, its flexibility.", "If you get stuck, borrow: what would an artist, an electrician, or a child do with it?"],
-    rubric: ["Generated at least 10 genuinely distinct uses", "Avoided minor variations of the same idea counted separately", "Didn't stop to evaluate/discard ideas mid-generation", "At least a few ideas exploited a non-obvious property (conductivity, shape, springiness)"],
+    rubric: ["I listed at least 10 truly different uses", "I didn't count small variations of one idea as separate ideas", "I kept generating without judging or deleting as I went", "Some ideas used hidden properties (metal conducts, wire bends, it springs)"],
     modelAnswer: "Strong lists include ideas across multiple properties: as a lockpick, a zipper-pull replacement, a phone SIM-tray ejector, a small hook, a reset-button presser, a bookmark, a makeshift antenna, a stitch-holder, a cable organizer, a straightened stylus, a fishing hook improvisation, jewelry wire, a small pointer, a circuit tester probe, a plant-stake label holder.",
     expertNote: "Divergent-thinking fluency is measured by count and by category-spread, not by how 'good' any single idea is — that judgment comes later, in a separate convergent step." },
 
@@ -498,7 +498,7 @@ const MTC_EXERCISES = [
     title: "The Opposite Constraint",
     prompt: "Pick an industry you know something about. Ask: 'what would this industry look like if its single biggest constraint were removed (or the opposite were true)?' e.g., what would restaurants look like if food never spoiled? What would education look like if attention span were infinite? Write your industry, its core constraint, and 3 concrete implications of removing it.",
     hints: ["Pick the constraint that shapes the most decisions in that industry, not a minor one.", "Removing a constraint should change more than one layer — pricing, location, competition, customer behavior can all shift.", "This isn't prediction — it's a tool to surface hidden assumptions your industry currently takes for granted."],
-    rubric: ["Identified a genuinely central constraint, not a peripheral one", "Traced concrete, specific implications (not vague 'it would be better')", "Implications touched more than one aspect of the industry", "Used the exercise to surface a hidden current assumption, not just imagine sci-fi"],
+    rubric: ["I picked the constraint that shapes the WHOLE industry, not a small annoyance", "My implications are specific changes, not 'things would be better'", "My implications touch several parts (price, location, competitors, behaviour)", "I ended by spotting an assumption the industry treats as unchangeable"],
     modelAnswer: "Example: restaurants, constraint = food spoilage. Remove it: inventory risk disappears, so menus could be far larger and more experimental; location matters less since delivery range isn't limited by freshness; a 'meal subscription with infinite variety' business model becomes viable; the entire cold-chain and waste-management side of the industry disappears, changing cost structure completely.",
     expertNote: "Lateral thinking exercises like this work by making a hidden, load-bearing assumption visible — once you see what's actually propping up the current structure, you can ask whether it's really as fixed as it looks." },
 
@@ -506,7 +506,7 @@ const MTC_EXERCISES = [
     title: "Borrow From Nature",
     prompt: "Pick a mechanism from biology (e.g. how ants find efficient paths, how immune systems distinguish self from foreign, how flocks move without a leader) and propose a business or product analog that uses the same underlying mechanism.",
     hints: ["Focus on the underlying *mechanism* (decentralized signaling, pattern-matching, redundancy), not surface features (don't just say 'make it look like an ant').", "Ask what problem the biological mechanism actually solves, then ask what business problem has the same shape.", "The best analogies transfer a structural principle (e.g. 'no central coordinator, just local rules') not just a metaphor."],
-    rubric: ["Identified the actual mechanism, not just a surface metaphor", "Named the underlying problem the biological system solves", "Proposed a business/product analog solving a structurally similar problem", "Explained the transfer explicitly rather than just asserting a resemblance"],
+    rubric: ["I described HOW the biological trick works, not just what it looks like", "I named the problem nature is solving with it", "My business idea solves a problem with the same shape", "I spelled out the connection instead of just saying 'it's like ants'"],
     modelAnswer: "Ant colonies find near-optimal paths with no central planner, using local pheromone-trail reinforcement (mechanism: decentralized positive feedback on locally-discovered good options). Analog: a recommendation system where each user's small local choices reinforce popular paths for others, without a central curator deciding what's good — this is structurally how many algorithmic feeds already work, and the biology explains why decentralized reinforcement can outperform centralized curation at scale.",
     expertNote: "Biomimicry fails when it copies appearance; it works when it identifies the mechanism solving a structurally similar problem and transfers that." },
 
@@ -514,7 +514,7 @@ const MTC_EXERCISES = [
     title: "Combine Two Unrelated Things",
     prompt: "Pick two unrelated objects or services (e.g. a library and a gym; an alarm clock and a savings account). Generate 5 genuinely different product ideas that combine them, then pick the strongest one and explain your selection criteria.",
     hints: ["Force genuine combination, not just placing one inside the other unchanged.", "Vary which properties you're combining: function, business model, physical form, user experience.", "When converging, state your criteria (novelty, feasibility, market size) explicitly before picking, so the choice isn't just gut-feel."],
-    rubric: ["Generated 5 combinations that are meaningfully distinct from each other", "At least one combination goes beyond a superficial mashup", "Stated explicit selection criteria before converging", "The final choice is actually justified by the stated criteria, not just preference"],
+    rubric: ["I created 5 genuinely different combination ideas", "At least one idea truly merges the two things (not just 'X placed inside Y')", "I wrote my judging rules BEFORE picking a winner", "My winner actually wins by those rules, not just by gut feeling"],
     modelAnswer: "Alarm clock + savings account: (1) an alarm that gets progressively more expensive to snooze, charging into a savings goal; (2) a clock that donates to charity for every late wake-up; (3) a 'wake up early streak' that unlocks better interest rates; (4) an alarm that requires answering a budgeting question to turn off; (5) a shared-household alarm where snoozing costs everyone in a joint account. Selecting by feasibility + retention potential: option 3 (streak-linked interest) ties a real financial incentive to a habit loop without requiring new hardware.",
     expertNote: "The value of 'combine two random things' isn't the mashup itself — it's that forcing combination surfaces ideas neither category would generate alone." },
 
@@ -523,7 +523,7 @@ const MTC_EXERCISES = [
     title: "Knights and Knaves",
     prompt: "On an island, knights always tell the truth and knaves always lie. You meet two people, A and B. A says: 'At least one of us is a knave.' Who is the knight and who is the knave (or can you not tell)?",
     hints: ["Try assuming A is a knave and check if that's self-consistent with what A said.", "If A were a knave, A's statement would be false — meaning 'at least one of us is a knave' would be false, meaning both are knights. But that contradicts A being a knave.", "So A must be a knight (statement is true). Since A is a knight and the true statement says 'at least one is a knave,' B must be the knave."],
-    rubric: ["Tested the assumption 'A is a knave' for self-contradiction (not just guessed)", "Correctly derived that A must be a knight", "Correctly derived B must be a knave from A's true statement", "Explained the reasoning chain, not just the final answer"],
+    rubric: ["I tested 'what if A is the liar?' and found it contradicts itself", "I concluded A must be the truth-teller", "I concluded B must be the liar, because A's true statement needs one liar", "I wrote out the steps, not just the answer"],
     modelAnswer: "A is a knight, B is a knave. If A were a knave, A's statement ('at least one of us is a knave') would have to be false, implying both are knights — contradiction. So A is a knight, meaning the statement is true, and since A isn't the knave, B must be.",
     expertNote: "Knights-and-knaves puzzles train exactly the deductive skill of testing each hypothesis for self-consistency rather than pattern-matching to a 'feels right' answer." },
 
@@ -531,7 +531,7 @@ const MTC_EXERCISES = [
     title: "The Valid-Sounding Syllogism",
     prompt: "Evaluate: 'All successful startups moved fast. This startup moved fast. Therefore, this startup will be successful.' Is this argument logically valid? Explain why or why not, independent of whether the conclusion happens to be true.",
     hints: ["Write the argument in its abstract form: All A are B. This is B. Therefore this is A. Is that a valid form?", "This is the fallacy of affirming the consequent — it's invalid regardless of whether A, B, or the conclusion are true.", "Compare: 'All successful startups moved fast' doesn't mean 'everything that moved fast is a successful startup' — many things move fast and still fail."],
-    rubric: ["Abstracted the argument to its logical form", "Correctly identified it as invalid (affirming the consequent)", "Explained why validity is independent of whether the conclusion 'feels' true", "Gave or recognized a counterexample (moved fast but failed)"],
+    rubric: ["I rewrote the argument as a bare pattern (All A are B; this is B; so it's A)", "I said that pattern is broken logic, whatever the topic", "I explained that an argument can feel true and still be invalid", "I gave a counterexample: plenty of fast-moving startups still failed"],
     modelAnswer: "Invalid. Its form is 'All A are B; this is B; therefore this is A' — affirming the consequent. Even if every successful startup did move fast, plenty of unsuccessful startups also moved fast, so moving fast doesn't imply success. The argument is invalid regardless of whether the conclusion turns out to be true in any specific case.",
     expertNote: "This exact fallacy is common in business advice: extracting one trait shared by successes (survivorship bias's cousin) and treating it as sufficient, not just necessary or coincidental." },
 
@@ -539,7 +539,7 @@ const MTC_EXERCISES = [
     title: "Three Doors",
     prompt: "You're on a game show with 3 doors: one has a prize, two are empty. You pick door 1. The host, who knows what's behind each door, opens door 3 to reveal it's empty, then offers you the chance to switch to door 2. Should you switch? Reason through the probabilities rather than guessing.",
     hints: ["Before any doors open, each door has a 1/3 chance of the prize — including door 1.", "The host's action isn't random: he always opens an empty door you didn't pick. That extra information is the key.", "Your original pick keeps its 1/3 chance; the 2/3 chance that was spread across doors 2 and 3 now collapses entirely onto door 2, since door 3 is revealed empty."],
-    rubric: ["Correctly stated the initial 1/3 probability for each door", "Recognized the host's reveal is not random information (he avoids the prize door)", "Correctly concluded switching gives a 2/3 chance vs 1/3 for staying", "Explained *why*, not just stated the standard answer"],
+    rubric: ["I started from: each door begins with a 1-in-3 chance", "I noticed the host is NOT opening doors at random — he always avoids the prize", "I concluded switching wins 2 times out of 3", "I explained WHY, instead of just quoting the famous answer"],
     modelAnswer: "You should switch — door 2 now has a 2/3 chance, door 1 still has 1/3. Your original pick had a 1/3 chance of being right and a 2/3 chance of being wrong (i.e., the prize is behind one of the other two doors) at the start. The host's guaranteed-empty reveal doesn't change your original door's odds — it just concentrates the remaining 2/3 probability entirely onto the one door he didn't open.",
     expertNote: "This puzzle is famous precisely because the intuitive answer (50/50) is wrong — it's a clean example of why probability requires tracking what information an action actually reveals, not just counting remaining options." },
 
@@ -547,7 +547,7 @@ const MTC_EXERCISES = [
     title: "The Card Rule",
     prompt: "Four cards show: 3, 8, red, blue. Rule: 'If a card shows an even number, the opposite side is red.' Which card(s) must you turn over to test whether the rule is true, and no more?",
     hints: ["You need to check cases that could *disprove* the rule, not just ones that could confirm it.", "The '3' card can't violate an even→red rule no matter what's on the back — don't waste a check there.", "You must check '8' (even — its back must be red) and 'blue' (if its back were even, the rule would be violated) — 'red' doesn't need checking, since the rule says nothing about what's behind red cards."],
-    rubric: ["Selected exactly the '8' and 'blue' cards (not more, not fewer)", "Explained why '3' doesn't need checking (can't violate an even→red rule)", "Explained why 'red' doesn't need checking (rule doesn't constrain red's back)", "Framed the choice around what could disconfirm the rule, not confirm it"],
+    rubric: ["I chose exactly two cards: the 8 and the blue one", "I explained why the 3 can't break the rule no matter what's behind it", "I explained why the red card proves nothing either way", "I picked cards that could DISPROVE the rule, not ones that agree with it"],
     modelAnswer: "Turn over '8' and 'blue' only. '8' must show red on the back, or the rule is broken. 'Blue' must NOT show an even number on the back, or the rule is broken. '3' is odd, so the rule makes no claim about it either way. 'Red' being on the front tells us nothing that could break the rule (it only constrains what's behind even numbers, not what number is behind red).",
     expertNote: "This is the Wason selection task — most people instinctively check cards that could *confirm* the rule (like 'red') instead of the ones that could *disprove* it, which is confirmation bias showing up in pure logic." },
 
@@ -556,7 +556,7 @@ const MTC_EXERCISES = [
     title: "The Extended Warranty",
     prompt: "A $600 laptop offers a $90 2-year extended warranty. Repairs covered by the warranty typically cost $250, and roughly 12% of laptops need a covered repair in that window. Using expected value, should you buy the warranty? What does expected value alone miss here?",
     hints: ["Expected value of needing the repair: probability × cost of repair if you don't have the warranty.", "0.12 × $250 = $30 expected repair cost, well below the $90 warranty price — on pure expected value, skip it.", "Expected value misses risk tolerance: for someone who can't absorb a surprise $250 repair bill at all, insuring against a low-probability-but-inconvenient loss can be rational even at a bad 'price', because it's not a repeatable bet you can average over."],
-    rubric: ["Correctly computed the expected value comparison ($30 expected loss vs $90 warranty)", "Concluded the warranty is a bad bet on pure expected value", "Identified what expected value misses (risk tolerance / non-repeatable single bet / budget shock)", "Didn't treat 'expected value says no' as automatically the final answer"],
+    rubric: ["I did the math: 12% of $250 is about $30 average repair cost, vs $90 for the warranty", "I concluded that on averages alone, the warranty loses", "I named what the math misses: whether a surprise $250 bill would actually hurt this buyer", "I didn't treat the math as the automatic final word"],
     modelAnswer: "Expected repair cost without the warranty is 0.12 × $250 = $30, well under the $90 warranty price — on pure expected value, skip it. But expected value assumes you can average across many such bets; for a one-off $600 purchase, a person who genuinely cannot absorb an unplanned $250 repair may rationally still buy the warranty, not because the math favors it, but because a single bad outcome (not the average) is what they're actually protecting against.",
     expertNote: "Expected value is the right tool for repeatable bets; for one-off, budget-breaking risks, the right question is about ruin-avoidance, not the average outcome." },
 
@@ -564,7 +564,7 @@ const MTC_EXERCISES = [
     title: "Two Job Offers",
     prompt: "Offer A: stable role, $90k, low variance. Offer B: startup role, $70k base + equity that's worth $0 most likely, but could be worth $400k+ in a low-probability strong outcome. Sketch the decision as a simple tree (outcomes + rough probabilities) rather than answering from gut feel, then state what non-financial factor could reasonably tip the decision either way.",
     hints: ["A decision tree here just needs: Offer A → one likely branch. Offer B → at least two branches (fails / succeeds) with rough probabilities and payoffs.", "This isn't about getting the 'true' probabilities right — it's about making the trade-off explicit instead of implicit.", "Non-financial factors: how much runway/savings you have to survive a $70k salary, learning value regardless of outcome, or how much you value certainty itself."],
-    rubric: ["Actually sketched branches with rough probabilities and payoffs, not just verbal comparison", "Included at least two distinct outcomes for the startup path", "Named a concrete non-financial factor that could tip the decision", "Avoided declaring one offer 'objectively better' without acknowledging the trade-off is personal (risk tolerance dependent)"],
+    rubric: ["I sketched the outcomes with rough chances and money amounts", "My startup branch has at least two endings (equity worthless / equity pays off)", "I named a non-money factor that could decide it (savings, learning, stress)", "I admitted the right choice depends on the person, not just the numbers"],
     modelAnswer: "Tree: Offer A → $90k/year, ~95% certain. Offer B → ~85% chance equity is worth ~$0 (effective $70k), ~15% chance of a strong outcome (effective $70k + a share of $400k+). The expected value might even favor B, but the decision reasonably tips on runway: someone with 6 months of savings can absorb the likely $70k outcome; someone living paycheck to paycheck may rationally prefer A's certainty even if B's expected value is higher.",
     expertNote: "Building the tree doesn't remove the judgment call — it makes the trade-off you're actually making explicit, instead of hidden inside a gut feeling." },
 
@@ -572,7 +572,7 @@ const MTC_EXERCISES = [
     title: "The First Offer",
     prompt: "You're negotiating a used car's price. The seller opens at $18,000. You think fair value is closer to $14,500. Explain the anchoring risk in this situation and propose a counter-strategy, including what you'd do if you had to make the first move instead.",
     hints: ["The seller's opening number is designed to shift your reference point (anchor), even if you 'know' it's inflated.", "A pure counter-strategy: have your own number (backed by comparable listings) ready before hearing theirs, so your reference point isn't set by them.", "If you moved first, you'd want to anchor aggressively but defensibly — a number you can justify with evidence, not just a low-ball with no backing."],
-    rubric: ["Explained the anchoring mechanism specifically (why $18,000 shifts perception even if known to be high)", "Proposed a concrete counter-strategy (pre-set reference point from independent data)", "Addressed the 'moving first' scenario, not just responding to an anchor", "Distinguished an aggressive-but-defensible anchor from an unjustified low-ball"],
+    rubric: ["I explained how their $18,000 pulls my sense of 'fair' upward even though I know it's inflated", "My defence: bring my own number from real listings BEFORE hearing theirs", "I also answered what I'd do if I had to name a price first", "I distinguished a bold-but-provable first offer from a baseless low-ball"],
     modelAnswer: "The $18,000 opener risks shifting your internal sense of a 'fair' price upward even if you consciously know it's inflated — anchoring works even on people aware of it. Counter: arrive with your own number already fixed from independent comparable listings, and state it (with the evidence) before reacting to theirs, rather than negotiating as a discount off their anchor. If moving first yourself, anchor near the aggressive edge of what you can defend with actual comparables — an anchor you can justify holds up under pushback; one you can't will collapse at the first challenge.",
     expertNote: "Being aware of an anchoring tactic doesn't neutralize it — the fix is having your own independently-sourced reference point ready before the anchor lands, not just willpower." },
 
@@ -580,7 +580,7 @@ const MTC_EXERCISES = [
     title: "The Pivot Call",
     prompt: "A startup's current product has flat growth for 9 months, but a small, unrequested side-feature is seeing 3x the organic growth of the main product with a fraction of the investment. The team must decide: pivot fully, run both, or stay the course. What information would most reduce your uncertainty before deciding, and why is 'stay the course' not automatically the safe option here?",
     hints: ["Rank possible pieces of new information by how much they'd actually change your decision, not just by how easy they are to get.", "The flat main product isn't neutral — every month spent on it is an opportunity cost against the side-feature's momentum, so 'staying the course' has a real, ongoing cost, not zero cost.", "Running both may look like a hedge, but it can starve the side-feature of the focus that's driving its growth — 'do both' isn't automatically lower-risk."],
-    rubric: ["Named specific information that would meaningfully reduce uncertainty (not just 'more data')", "Explicitly rejected 'stay the course = safe/zero-cost' framing", "Addressed why 'run both' carries its own real risk (diluted focus), not treated as a free hedge", "Reasoned about the decision under genuine uncertainty rather than picking an option by default"],
+    rubric: ["I named the exact information I'd want first (is the side-feature's growth repeatable? would users pay for it?)", "I rejected the idea that doing nothing is free — flat months cost money and momentum", "I saw that 'do both' quietly splits focus and can starve the winner", "I reasoned through the uncertainty instead of defaulting to an option"],
     modelAnswer: "The most decision-relevant information: whether the side-feature's growth is driven by a repeatable acquisition channel or a one-off spike (e.g., a single viral post), and whether early side-feature users would pay for it standalone. 'Stay the course' is not automatically safe — 9 months of flat growth is itself an ongoing cost (opportunity cost against the side-feature's momentum, plus runway burn), and 'run both' risks starving the side-feature of the very focus that's producing its growth, making it a hidden-risk option rather than a free hedge.",
     expertNote: "In pivot decisions, the dangerous framing is treating inaction as the risk-free default — under genuine uncertainty with a visible opportunity cost, staying the course is a bet too, just an unexamined one." },
 
@@ -589,7 +589,7 @@ const MTC_EXERCISES = [
     title: "Spot the Fallacy",
     prompt: "'My opponent wants to reform the pension system. Clearly she doesn't care about elderly people at all.' Name the specific logical fallacy at work, and rewrite the sentence as a fair, non-fallacious version of the same disagreement.",
     hints: ["The sentence attacks a motive/character instead of engaging with the actual reform proposal — that's a specific, named fallacy.", "This is a strawman/ad hominem hybrid: it substitutes an extreme, uncharitable motive for the actual argument being made.", "A fair version would state the actual proposed reform and argue against its content or predicted effects, not the opponent's presumed character."],
-    rubric: ["Correctly named the fallacy (ad hominem / strawman)", "Explained specifically why it substitutes motive-attack for engaging the argument", "Rewrote it as a fair, content-focused disagreement", "The rewrite still expresses genuine disagreement, not a watered-down non-statement"],
+    rubric: ["I named the trick: attacking her motives instead of her plan", "I explained why 'she doesn't care' dodges the actual proposal", "I rewrote it to attack the POLICY, with reasons", "My rewrite still disagrees strongly — fair is not soft"],
     modelAnswer: "This is an ad hominem / strawman combination — it attacks a presumed motive ('doesn't care about elderly people') instead of the actual reform proposal. Fair version: 'My opponent's pension reform would reduce guaranteed benefits by X% — I think that risk outweighs the fiscal savings, for these reasons...' — this disagrees just as strongly, but with the actual policy, not an imagined motive.",
     expertNote: "Fallacious framing and genuine disagreement aren't opposites — you can hold the same strong position while dropping the fallacy, which usually produces a *more* persuasive argument, not a weaker one." },
 
@@ -597,7 +597,7 @@ const MTC_EXERCISES = [
     title: "The Hiring Panel",
     prompt: "A hiring manager decides in the first 5 minutes of an interview that a candidate is 'a great culture fit,' then spends the rest of the interview asking questions that mostly confirm that impression. Name the bias, and propose one concrete process change that would reduce it.",
     hints: ["The manager formed a conclusion early and then (likely unconsciously) sought information that supported it rather than tested it.", "This is confirmation bias, compounded by a fast first impression driving the rest of the process.", "A concrete fix: structure the interview with fixed, pre-written questions asked of every candidate in the same order, so later questions aren't chosen based on the early impression."],
-    rubric: ["Correctly named confirmation bias (not just 'bias' generically)", "Explained the specific mechanism (early impression shaping later questioning)", "Proposed a concrete, implementable process change", "The proposed fix specifically targets the mechanism identified, not a generic 'be more objective'"],
+    rubric: ["I named it: confirmation bias", "I explained the chain: quick first impression, then questions chosen to confirm it", "I proposed a real fix (same fixed questions for every candidate, scored separately)", "My fix blocks the actual mechanism, not just 'try to be fair'"],
     modelAnswer: "This is confirmation bias: the early impression became a hypothesis the interviewer then unconsciously tested only in confirming ways. A concrete fix: use a structured interview with a fixed set of questions, asked in the same order to every candidate, scored independently by multiple interviewers before comparing notes — this removes the interviewer's ability to steer later questions toward confirming an early impression.",
     expertNote: "Structured interviews are one of the best-evidenced fixes in all of hiring research precisely because they remove the room for confirmation bias to operate mid-interview." },
 
@@ -605,7 +605,7 @@ const MTC_EXERCISES = [
     title: "The Dropout Narrative",
     prompt: "'Look at all these billionaire founders who dropped out of college — degrees don't matter for success.' What's wrong with this argument, specifically in terms of survivorship bias?",
     hints: ["The argument only looks at successful dropouts — what's missing from the picture?", "Survivorship bias: the far larger group of dropouts who did *not* succeed is invisible in this argument, because failures don't get profiled.", "To actually test the claim, you'd need the success rate of dropouts vs. graduates, not a highlight reel of famous successes."],
-    rubric: ["Identified specifically what's missing (unsuccessful dropouts, who aren't visible)", "Named survivorship bias explicitly", "Stated what evidence would actually test the claim (comparative success rates, not anecdotes)", "Didn't just assert 'correlation isn't causation' without the specific survivorship mechanism"],
+    rubric: ["I spotted who's missing from the story: all the dropouts who FAILED", "I named it: survivorship bias", "I said what would really test it: success rates of dropouts vs graduates overall", "I explained the specific trap, not just a slogan about correlation"],
     modelAnswer: "The argument only samples visible successes — famous dropout billionaires — while the (much larger) population of dropouts who didn't succeed is invisible, because failure doesn't produce a magazine profile. To actually test whether dropping out helps or hurts success odds, you'd need the comparative success rate of dropouts vs. graduates overall, not a highlight reel of extreme outliers.",
     expertNote: "Survivorship bias is dangerous specifically because the missing data (the failures) isn't just unmentioned — it's usually genuinely invisible, since failures rarely get written about at all." },
 
@@ -613,7 +613,7 @@ const MTC_EXERCISES = [
     title: "The Sunk Project",
     prompt: "A team has spent 8 months and $200k on a project that internal data now suggests won't work. The team lead says: 'We've already put in too much to stop now.' Name the fallacy, and explain what question the team should be asking instead.",
     hints: ["The $200k and 8 months are already spent regardless of what happens next — can they be recovered by continuing?", "This is the sunk cost fallacy: treating unrecoverable past investment as a reason to continue, when it can't be affected by the decision going forward.", "The right question only looks forward: 'given only the costs and benefits from today onward, is continuing the best use of the *next* dollar and month?'"],
-    rubric: ["Correctly named the sunk cost fallacy", "Explained why past costs are irrelevant to the forward-looking decision", "Reframed the correct question in purely forward-looking terms", "Didn't conflate 'sunk cost fallacy' with 'always quit early' — the point is the right question, not a bias toward quitting"],
+    rubric: ["I named it: the sunk cost fallacy", "I explained that the $200k is gone whether they continue or stop", "I rewrote the question: 'starting from TODAY, is continuing the best use of the next dollar?'", "I didn't twist the lesson into 'always quit' — sometimes continuing IS right"],
     modelAnswer: "This is the sunk cost fallacy: the $200k and 8 months are gone regardless of the decision now, so they shouldn't factor into it. The right question is entirely forward-looking: 'given only the costs and benefits from today forward, is continuing the best use of the next dollar and month, compared to stopping or redirecting them?' — the past spend is relevant only as information about how reliable this team's estimates have been, not as a reason to persist.",
     expertNote: "The fallacy isn't 'don't quit' or 'always quit' — it's evaluating the decision using only the wrong variable (money already spent) instead of the right one (expected value of continuing from here)." },
 
@@ -622,7 +622,7 @@ const MTC_EXERCISES = [
     title: "What's Actually Different",
     prompt: "Paragraph 1: 'Sales grew 20% this quarter, driven by strong performance in our core enterprise segment.' Paragraph 2: 'Revenue grew 20% this quarter, driven by one large one-time enterprise contract.' List at least 3 concrete differences in what these two paragraphs actually claim, beyond their similar tone.",
     hints: ["Compare 'sales' vs 'revenue' — are these guaranteed to be the same thing in every business?", "'Strong performance in our core segment' implies a repeatable trend; 'one large one-time contract' implies the opposite — a non-repeating event.", "Notice that the headline number (20%) is identical in both, even though the underlying reality they describe is very different."],
-    rubric: ["Noticed the sales vs revenue terminology difference", "Identified the repeatable-trend vs one-time-event distinction as the key substantive difference", "Noticed the identical headline number despite differing substance", "Didn't just restate that both 'sound similar' without finding the concrete deltas"],
+    rubric: ["I noticed 'sales' and 'revenue' aren't automatically the same thing", "I caught the big one: a repeatable trend vs a one-off deal that won't repeat", "I noticed both say '20%' while describing opposite realities", "I listed concrete differences, not just 'they sound alike'"],
     modelAnswer: "Differences: (1) 'sales' vs 'revenue' aren't always interchangeable depending on accounting treatment; (2) 'strong performance in our core segment' implies a broad, repeatable trend, while 'one large one-time contract' implies a non-repeating event that won't recur next quarter; (3) both report the identical 20% headline figure despite describing very different underlying realities — one sustainable, one not.",
     expertNote: "The skill here is noticing that identical headline numbers can be wrapped around opposite underlying realities — the framing sentence often carries more real information than the statistic itself." },
 
@@ -630,7 +630,7 @@ const MTC_EXERCISES = [
     title: "What's Missing From the Dashboard",
     prompt: "A dashboard reports: '5,000 users signed up this month, up from 3,000 last month.' What key piece of missing context would most change how impressive this looks, and why?",
     hints: ["A raw count of new signups is missing the denominator — signups as a fraction of what?", "Missing context: total addressable audience reached, marketing spend behind the signups, or the churn/retention rate of those same users.", "5,000 signups off a $500k ad spend and 3,000 off $50k tell a very different efficiency story than the raw counts alone."],
-    rubric: ["Identified a specific, concrete missing metric (not just 'more context')", "Explained *why* that missing metric changes the interpretation", "Considered efficiency/cost or retention, not just the raw growth number", "Avoided assuming the growth is impressive or unimpressive without the missing data"],
+    rubric: ["I named a specific missing number (ad spend? how many signups stayed active?)", "I explained how that number could flip the story", "I considered cost per signup or retention, not just the raw count", "I refused to judge 'impressive or not' without the missing data"],
     modelAnswer: "The raw counts are missing the denominator that would make them meaningful: how much was spent (or how large an audience was reached) to generate each cohort of signups, and what fraction of those signups are still active weeks later. 5,000 signups from a much larger ad spend, with high early churn, could actually represent worse performance than the 3,000 figure — the raw growth number alone can't tell you that.",
     expertNote: "A rate without its denominator (or a metric without its cost) is one of the most common ways real deterioration gets reported as apparent growth." },
 
@@ -638,7 +638,7 @@ const MTC_EXERCISES = [
     title: "Read Between the Numbers",
     prompt: "A sales rep who had the worst month on the team last quarter had the best month on the team this quarter. Management points to this as proof the new coaching program works. What alternative explanation should you check before crediting the program?",
     hints: ["Extreme results (best or worst) in any noisy process tend to be followed by more average results, even with no intervention at all.", "This is regression to the mean: the worst-performer likely had an unusually bad (not fully representative) month, and would have improved somewhat even without coaching.", "To actually test the program, you'd want to see if this pattern holds across many reps, and compare to a group that didn't get the coaching."],
-    rubric: ["Named regression to the mean specifically", "Explained why an extreme low result is likely to be followed by improvement regardless of intervention", "Proposed what evidence would actually isolate the program's effect (comparison group, effect across many reps)", "Didn't dismiss the program's effect entirely, just correctly identified it as unproven by this single case"],
+    rubric: ["I named the effect: extreme results drift back toward normal on their own", "I explained why the worst month is usually followed by a better one — coaching or not", "I said what would prove it: many reps improving, compared against reps with no coaching", "I didn't claim the coaching is useless — just unproven by one person's bounce"],
     modelAnswer: "This looks like regression to the mean: an unusually bad month is disproportionately likely to be followed by a more typical (better) one, purely from natural variance, regardless of any coaching. To actually credit the program, you'd want to see the same before/after improvement across many reps, ideally compared against reps who didn't receive the coaching, rather than pointing at one dramatic before/after case.",
     expertNote: "Single dramatic 'proof' stories are exactly where regression to the mean hides best, because the story feels causal and the base-rate explanation is invisible unless you go looking for it." },
 
@@ -646,7 +646,7 @@ const MTC_EXERCISES = [
     title: "Notice the Frame",
     prompt: "'The proposal was rammed through committee despite objections' vs. 'The proposal passed committee after debate.' Both could describe the exact same event. Identify the loaded language in the first version and explain what emotional conclusion it's steering you toward.",
     hints: ["'Rammed through' and 'despite objections' carry connotation beyond the literal fact that a vote happened.", "This framing implies illegitimacy and suppressed dissent, steering the reader toward viewing the outcome as improper, regardless of the actual vote count or process.", "Compare what a neutral description would need: just the vote count and whether normal procedure was followed — the loaded version omits both."],
-    rubric: ["Identified specific loaded phrases, not just 'it sounds biased'", "Explained the emotional/judgmental conclusion the framing steers toward", "Named what a neutral version would need to include instead", "Recognized both sentences could describe the identical literal event"],
+    rubric: ["I pointed at the exact loaded words ('rammed through', 'despite objections')", "I said what verdict those words push me toward (something shady happened)", "I described the neutral version: the vote count and whether rules were followed", "I recognised both sentences can describe the SAME meeting"],
     modelAnswer: "'Rammed through' implies force and improper haste; 'despite objections' implies dissent was overridden rather than simply outvoted. Together they steer the reader toward viewing the outcome as illegitimate, without stating the actual vote count or whether normal procedure was followed. A neutral version would report those concrete facts and let the reader judge, rather than pre-loading the judgment into the verbs.",
     expertNote: "Loaded framing is powerful precisely because it can be factually accurate at the literal level while still steering the reader's conclusion — spotting it requires separating the reported fact from the connotation carried by the verbs chosen to report it." },
 ];
@@ -663,11 +663,11 @@ const MTC_BOSS_BATTLES = [
     ],
     noPerfectAnswerNote: "There is no framing that satisfies both the population-level statistics and the individual affected by the rare side effect — any honest answer has to hold both truths at once without collapsing into either 'it's basically risk-free' or 'the anecdote proves it's dangerous.'",
     rubric: [
-      "Compared population-level expected harm from the disease vs. the vaccine, with my assumptions stated",
-      "Identified the second-order risk of messaging aimed at the hesitant group (reactance, lost trust)",
-      "Addressed the vivid-anecdote vs. statistics gap without dismissing the real, rare harm",
-      "Explicitly named which thinking frameworks I applied",
-      "Held both truths at once instead of collapsing into 'basically risk-free' or 'proven dangerous'",
+      "I compared total harm both ways — disease vs vaccine — and showed my assumptions",
+      "I saw how pressuring hesitant people can backfire (pressure breeds distrust)",
+      "I took the viral story seriously WITHOUT letting one case outweigh the statistics",
+      "I named the thinking tools I used",
+      "I held both truths: the rare harm is real AND the odds still favour vaccination",
     ],
     xpBase: 100 },
 
@@ -681,11 +681,11 @@ const MTC_BOSS_BATTLES = [
     ],
     noPerfectAnswerNote: "Fighting risks losing anyway at a worse price after burning trust; negotiating risks the board being accused of not maximizing shareholder value by resisting harder — there's no move here that isn't a bet under real uncertainty.",
     rubric: [
-      "Mapped the acquirer's likely best response to both fighting and negotiating",
-      "Red-teamed my own defense and found its weakest point (e.g. shareholder vs. management incentives)",
-      "Traced a consequence of a public fight that applies even if we win it",
-      "Explicitly named which thinking frameworks I applied",
-      "Treated both paths as bets under uncertainty rather than declaring a clean winner",
+      "I predicted how the buyer answers each of my moves (fight vs negotiate)",
+      "I attacked my own defence and found its weak spot (whose interests does it really protect?)",
+      "I named a cost of a public fight that hits us even if we WIN",
+      "I named the thinking tools I used",
+      "I treated both paths as bets — I didn't pretend one is the obvious winner",
     ],
     xpBase: 100 },
 
@@ -699,11 +699,11 @@ const MTC_BOSS_BATTLES = [
     ],
     noPerfectAnswerNote: "Escalating can be professionally and legally costly to you personally even when it's the right call; staying quiet protects you and the company short-term while leaving real people at risk — there is no answer here that has no cost.",
     rubric: [
-      "Applied at least two different ethical lenses and noted where they conflict",
-      "Read 'don't escalate' as a systems signal about how the next issue will be handled",
-      "Traced two rounds of consequences for both staying quiet and escalating",
-      "Explicitly named which thinking frameworks I applied",
-      "Faced the personal cost honestly instead of assuming the right choice is free",
+      "I judged it through two different moral lenses and showed where they clash",
+      "I read 'don't escalate' as a preview of how the NEXT problem will get buried",
+      "I traced what happens AFTER the first consequence, for both staying quiet and speaking up",
+      "I named the thinking tools I used",
+      "I was honest that doing the right thing might cost me personally",
     ],
     xpBase: 100 },
 
@@ -717,11 +717,11 @@ const MTC_BOSS_BATTLES = [
     ],
     noPerfectAnswerNote: "Shipping now trades a known, explainable error rate for an unknown, differently-shaped one in the name of speed; waiting cedes ground to competitors while the current human process keeps making its own errors in the meantime — neither option is risk-free.",
     rubric: [
-      "Explained why 'better on average' isn't automatically the right shipping criterion",
-      "Weighed first-mover advantage against reputational tail risk explicitly",
-      "Addressed whether opaque AI errors differ ethically from accountable human ones",
-      "Explicitly named which thinking frameworks I applied",
-      "Engaged the ship-vs-wait tension instead of picking a falsely clean side",
+      "I explained why 'better on average' can still be the wrong reason to launch",
+      "I weighed moving first against one bad story wrecking public trust",
+      "I tackled the fairness question: errors nobody can explain or appeal against",
+      "I named the thinking tools I used",
+      "I wrestled with ship-vs-wait instead of pretending one side is obviously right",
     ],
     xpBase: 100 },
 
@@ -735,11 +735,11 @@ const MTC_BOSS_BATTLES = [
     ],
     noPerfectAnswerNote: "The generous terms being offered early is itself ambiguous evidence — it could mean the besieger is weaker than they appear (negotiate from strength) or that they expect to win regardless and are being magnanimous (negotiate from weakness) — the same fact supports opposite strategies depending on which read is correct, and you cannot fully verify which from inside the city.",
     rubric: [
-      "Read the offer's early timing as evidence and considered both interpretations of it",
-      "Built two or three genuinely distinct scenarios and looked for the decision robust across them",
-      "Identified this as a ruin-risk decision, not an averageable bet",
-      "Explicitly named which thinking frameworks I applied",
-      "Acknowledged the same fact supports opposite strategies and can't be verified from inside",
+      "I treated the early generous offer as a clue — and read it BOTH ways",
+      "I built 2-3 genuinely different futures and looked for the choice that survives most of them",
+      "I recognised one wrong call could be the end — this is not a repeatable bet",
+      "I named the thinking tools I used",
+      "I admitted the same clue supports opposite plans, and I can't fully verify either",
     ],
     xpBase: 100 },
 
@@ -753,11 +753,11 @@ const MTC_BOSS_BATTLES = [
     ],
     noPerfectAnswerNote: "Acting on the crash prediction and being wrong costs real, certain returns during the wait; ignoring it and being wrong risks a large, possibly correlated loss — under genuine uncertainty about which analyst is right, there's no allocation that's safe against both outcomes.",
     rubric: [
-      "Anchored on the base rate of 'this time is different' claims before adjusting for specifics",
-      "Expressed the decision as an allocation reflecting uncertainty, not a binary crash/no-crash call",
-      "Named my likely confirmation bias and a concrete way to correct for it",
-      "Explicitly named which thinking frameworks I applied",
-      "Accepted that no allocation is safe against both outcomes instead of forcing false certainty",
+      "I started from history: 'this time is different' has usually been wrong",
+      "My answer is a mix (partly protect, partly stay invested), not an all-or-nothing bet",
+      "I named which story I WANTED to believe, and how I corrected for that pull",
+      "I named the thinking tools I used",
+      "I accepted there is no choice that's safe in both futures",
     ],
     xpBase: 100 },
 ];
@@ -890,7 +890,7 @@ MTC_EXERCISES.push(
     title: "The Late Colleague",
     prompt: "A colleague who is never late is 40 minutes late to your meeting and hasn't messaged. Write down the first explanation your mind produced. Then write two more explanations that fit the facts equally well.",
     hints: ["Notice whether your first explanation assumed something about their character or intent.", "Abduction generates the most plausible story, not the only one — traffic, a family emergency, a calendar sync error, and 'they blew you off' all fit the same two facts.", "Rank your three explanations by base rate: how often does each actually happen to punctual people? The uncharitable one is usually the rarest."],
-    rubric: ["Wrote the genuine first instinct without editing it", "Generated two alternatives that fit the same facts", "Noticed whether the first instinct assumed intent or character", "Considered which explanation is most common in reality, not most vivid"],
+    rubric: ["I wrote my honest first assumption, unedited", "I added two more explanations that fit the same two facts", "I checked: did my first guess accuse them of something?", "I asked which explanation happens most often in real life, not which is most dramatic"],
     modelAnswer: "The facts support many stories: an accident, a family emergency, a dead phone, a calendar error, or being stuck in a prior meeting. If your first instinct was about disrespect or unreliability, note that for a habitually punctual person, mundane logistics failures are vastly more common than sudden character changes.",
     expertNote: "Hanlon's Razor generalizes here: before attributing to intent, exhaust the explanations that require nothing unusual about the person at all." },
 
@@ -898,7 +898,7 @@ MTC_EXERCISES.push(
     title: "The Worsening Hospital",
     prompt: "A hospital's average recovery time got worse in the year after it hired top specialists and upgraded its ICU. A journalist writes that care quality is declining. What's the alternative explanation, in 2-3 sentences?",
     hints: ["What kind of patients would start choosing (or being referred to) a hospital after it adds top specialists?", "Better facilities attract harder cases — the patient mix changed, not necessarily the care quality.", "To compare fairly you'd need severity-adjusted outcomes: how does each category of patient fare now vs before?"],
-    rubric: ["Identified the change in patient mix as the alternative explanation", "Explained why better facilities attract harder cases", "Named what a fair comparison would require (severity adjustment)", "Didn't accept or reject the 'declining quality' claim without the missing data"],
+    rubric: ["I spotted the alternative: sicker patients started coming, so averages worsened", "I explained why better hospitals attract the hardest cases", "I said a fair test compares similar patients before vs after", "I refused to judge the hospital without that fairer comparison"],
     modelAnswer: "Upgrading attracts sicker, more complex patients — referrals send the hardest cases to the best-equipped hospital. Average recovery time can worsen even while every category of patient does better than before. A fair judgment requires severity-adjusted outcomes, not raw averages.",
     expertNote: "This is a selection effect wearing the mask of a trend — whenever the population being measured changes, the metric can move in the opposite direction of the underlying reality." },
 
@@ -906,7 +906,7 @@ MTC_EXERCISES.push(
     title: "Free Shipping",
     prompt: "An online store announces 'free shipping on all orders, forever.' Nothing is free. List two places the cost likely reappears, and one second-order effect on customer behavior.",
     hints: ["If shipping revenue disappears but shipping costs don't, where must the money come from?", "Common absorptions: higher base prices, minimum-order thresholds later, squeezed supplier margins, or reduced service elsewhere.", "Second-order: free shipping changes ordering behavior — more frequent small orders, higher return rates ('I'll just send it back'), which raises the very cost being hidden."],
-    rubric: ["Named at least two plausible places the cost reappears", "Identified a behavioral second-order effect, not just an accounting one", "Recognized the policy changes customer behavior, which changes the cost itself", "Avoided 'the company just absorbs it' as a complete answer"],
+    rubric: ["I named two places the shipping cost hides (higher prices, squeezed suppliers, minimums)", "I named a behaviour change it causes (more small orders, casual returns)", "I saw that the behaviour change makes total shipping cost even bigger", "I didn't settle for 'the company just eats the cost'"],
     modelAnswer: "The cost typically reappears in higher base prices and in pressure on margins elsewhere (suppliers, support, packaging). Second-order: customers reorganize their behavior around it — smaller, more frequent orders and casual returns — which inflates total shipping volume, so the policy partly manufactures the cost it absorbs.",
     expertNote: "Pricing moves are never just accounting — they're behavioral interventions, and the behavior change is usually the bigger effect." },
 
@@ -914,7 +914,7 @@ MTC_EXERCISES.push(
     title: "The One-Sentence Steelman",
     prompt: "Pick a position you disagree with (e.g. 'open-plan offices are good', 'homework should be abolished', or your own choice). Write its single strongest sentence — the case its smartest advocate would make — without irony or weakening.",
     hints: ["If your sentence would make an advocate of the position wince, it's a strawman wearing a suit.", "The test: would someone who holds the view say 'yes, exactly'?", "Strong steelmen usually locate the real value the position protects (e.g. open-plan: serendipitous collaboration and equal spatial status), not the caricature."],
-    rubric: ["Chose a position genuinely disagreed with", "The sentence identifies the real value the position protects", "An actual advocate would endorse the sentence as written", "No irony, hedging, or embedded rebuttal"],
+    rubric: ["I picked a view I truly disagree with", "My sentence names the real benefit that view protects", "A true believer would read my sentence and say 'yes, exactly'", "I kept out sarcasm, 'but...', and hidden digs"],
     modelAnswer: "There's no single right answer — the test is whether an advocate would sign it. Example for open-plan offices: 'Open plans trade individual quiet for constant low-friction access to colleagues, betting that the compounding value of spontaneous collaboration exceeds the cost of interruptions.'",
     expertNote: "You don't understand a position until you can state it so well its holders would applaud — only then does your disagreement carry information." },
 
@@ -923,7 +923,7 @@ MTC_EXERCISES.push(
     title: "The Password Policy Backfire",
     prompt: "A company mandates password changes every 30 days with strict complexity rules. A year later, security incidents have risen. Explain the mechanism by which a well-intentioned security policy can reduce security, and propose a better policy.",
     hints: ["Think about what real humans do when forced to invent and memorize a new complex secret every month.", "Predictable mutations (Password1! becomes Password2!), sticky notes, and password reuse across systems are adaptations the policy itself creates.", "Modern guidance (e.g. NIST) dropped forced periodic rotation in favor of long passphrases, breach-triggered resets, and multi-factor authentication."],
-    rubric: ["Explained the adaptation mechanism (humans route around unusable rules)", "Named at least two specific degraded behaviors the policy creates", "Proposed a better policy (passphrases, MFA, breach-triggered resets)", "Framed it as a systems lesson, not just a security tip"],
+    rubric: ["I explained the core: people can't memorise new complex passwords monthly, so they work around the rule", "I named two of the workarounds (Password1 becomes Password2, sticky notes, reuse)", "I proposed better rules (long passphrases, two-factor login, reset only after a breach)", "I drew the bigger lesson: a rule people dodge isn't really your rule"],
     modelAnswer: "The policy exceeds human memory capacity, so users adapt: incremental mutations an attacker can guess, written-down passwords, and reuse across accounts. The system's real behavior is set by the adaptation, not the rule. Better: long memorable passphrases, multi-factor authentication, and forced resets only after suspected compromise — which is where security guidance has actually moved.",
     expertNote: "Any policy that ignores the adaptive response of the people inside the system is describing an imaginary system — the workaround is the policy." },
 
@@ -931,7 +931,7 @@ MTC_EXERCISES.push(
     title: "Crippling the Free Tier",
     prompt: "A freemium product converts 2% of free users to paid. An executive proposes sharply degrading the free tier to 'force upgrades.' Map the first-order effect, then at least two second-order effects that could make revenue fall.",
     hints: ["First-order: some free users convert, many leave. What did the leaving users contribute besides zero revenue?", "Free users are often the top of the funnel: referrals, word of mouth, community content, and future converts at life stage changes.", "Second-order: degraded free tiers also change the reputation of the paid tier — 'they'll squeeze you once you're in' affects would-be payers, not just free riders."],
-    rubric: ["Stated the first-order trade (some conversions, mass departures)", "Identified free users' non-revenue contributions (referral, funnel, content)", "Traced a reputational second-order effect on paying customers", "Concluded with what data would settle it, not just a verdict"],
+    rubric: ["I stated the immediate trade: a few upgrade, many leave", "I listed what free users give besides money (referrals, word of mouth, future upgrades)", "I saw the reputation risk: 'they'll squeeze you later' scares paying customers too", "I named the data that would settle it (how many payers started as free users?)"],
     modelAnswer: "First-order: a conversion bump and a large exodus. Second-order: the exodus cuts referrals and word of mouth, shrinking the future funnel that today's 2% converts from; and the squeeze signals to prospective payers how they'll be treated later, which suppresses exactly the high-intent users the move was meant to harvest. The decisive data: what fraction of current paid users started free, and how long the average conversion takes.",
     expertNote: "Freemium economics usually die by funnel starvation, not free-rider costs — the free tier's job is to be the top of the funnel, and its cost should be judged as marketing spend." },
 
@@ -939,7 +939,7 @@ MTC_EXERCISES.push(
     title: "Five Whys at the Bakery",
     prompt: "A bakery sells out of croissants by 9am every day, disappointing later customers, yet management won't bake more. Run a Five Whys analysis — invent plausible answers at each level — until you reach a root cause that is actionable.",
     hints: ["Why #1 is easy: demand exceeds supply. The question is why supply doesn't respond.", "Keep asking: why is production capped? (oven time? staff shift? dough prep the night before?) Why is that constraint set where it is?", "A good chain often ends at an incentive or information failure: e.g. the baker is paid per shift not per sale, or waste from unsold stock is punished more than missed sales — making under-baking rational."],
-    rubric: ["Chained at least four 'why' levels, each answering the previous", "Reached a cause that is actionable, not 'demand is high'", "Considered incentive or information failures, not just physical constraints", "Proposed the fix implied by the root cause"],
+    rubric: ["I asked 'why' at least four layers deep, each answering the last", "I landed on a cause someone could actually fix (not 'people love croissants')", "I considered rewards and missing information, not just oven capacity", "My proposed fix matches my root cause"],
     modelAnswer: "One plausible chain: Sell out by 9am → production is capped at 200 → dough is prepped the prior evening based on a fixed number → the number never updates because no one records turned-away customers → unsold waste is tracked and penalized but missed sales are invisible. Root cause: an asymmetric measurement system that punishes overproduction and never counts underproduction. Fix: track sell-out time and turned-away demand, and set prep quantity from both.",
     expertNote: "Five Whys chains most often terminate at a measurement asymmetry: what gets counted gets managed, and the invisible cost quietly dominates." },
 
@@ -947,7 +947,7 @@ MTC_EXERCISES.push(
     title: "The Expiring Discount",
     prompt: "A vendor quotes you a price and adds: 'this offer expires Friday.' Analyze the deadline as a negotiation move: what is it designed to do, when is it real versus manufactured, and how should you respond?",
     hints: ["Deadlines compress your evaluation time and invoke scarcity/loss-aversion — that's their job regardless of whether they're real.", "Real deadlines have external anchors (quarter end, capacity commitments, price-list changes); manufactured ones evaporate under a polite test.", "The test: 'I can't decide by Friday; if the price changes, send me the new quote.' A real deadline survives that; a fake one usually gets extended."],
-    rubric: ["Identified the psychological mechanism (scarcity, compressed evaluation)", "Distinguished externally-anchored deadlines from manufactured ones", "Proposed a concrete, polite test of the deadline's reality", "Kept the decision anchored on the deal's standalone value, not the clock"],
+    rubric: ["I explained what the deadline does: rushes me so I evaluate less", "I distinguished real deadlines (quarter end, capacity) from invented ones", "I wrote a polite test: 'If Friday passes, just send me the new quote'", "I judged the deal as if no deadline existed"],
     modelAnswer: "The deadline's function is to substitute time pressure for product merit. Real ones trace to external facts (fiscal quarter, capacity, announced price changes) — you can ask what the deadline is anchored to. The clean response: evaluate the deal as if no deadline existed, then test it: 'If Friday passes, send the revised quote.' Fake urgency almost always extends; real urgency gives you the anchor to verify.",
     expertNote: "Any negotiation move that works equally well whether or not it's true should be treated as noise until independently verified." },
 
@@ -956,7 +956,7 @@ MTC_EXERCISES.push(
     title: "Blockbuster's Golden Handcuffs",
     prompt: "At its peak, Blockbuster reportedly earned hundreds of millions per year from late fees — a large share of its profit. Netflix launched with no late fees at all. Explain, in systems terms, why Blockbuster couldn't simply copy the no-late-fee model even after seeing it work.",
     hints: ["The late fees weren't a side revenue stream — ask what fraction of profit they were, and what removing them does to the P&L that executives are judged on.", "This is a reinforcing lock-in: stores, staffing, and shareholder expectations were all built on an income stream that punished the customer experience.", "From first principles: Blockbuster defined itself as a retail chain that rented tapes; Netflix defined itself as home movie access. The first definition makes late fees structural; the second makes them absurd."],
-    rubric: ["Identified that late fees were structural profit, not incidental revenue", "Explained the lock-in: dropping them meant destroying the current P&L to maybe save the future one", "Reframed the two companies' first-principles definitions of their business", "Drew the general lesson about profitable practices that damage customers"],
+    rubric: ["I saw late fees were a main profit source, not small change", "I explained the trap: copying Netflix meant blowing up today's profits for a maybe-future", "I contrasted the two self-definitions: 'tape rental shops' vs 'movies at home'", "I wrote the lesson: profiting from what customers hate invites a rival to remove it"],
     modelAnswer: "Late fees were load-bearing: a major profit line supporting store economics and shareholder expectations. Copying Netflix meant voluntarily blowing a hole in the present income statement for an uncertain future — a trade almost no incumbent management survives making. From first principles, Blockbuster sold 'retail tape rental with penalties'; Netflix sold 'movies at home, frictionless.' The fee wasn't a pricing choice but a symptom of the business definition — which is why it couldn't be removed without redefining the company.",
     expertNote: "When a company profits from something its customers hate, that line item is a standing invitation for a competitor to build the same business minus the hated part." },
 
@@ -964,7 +964,7 @@ MTC_EXERCISES.push(
     title: "The Treaty of Hudaybiyyah",
     prompt: "In 628 CE, the Prophet Muhammad accepted treaty terms at Hudaybiyyah that many companions saw as one-sided: turning back from pilgrimage that year, and a clause returning certain emigrants to Mecca. Within two years the treaty had decisively strengthened his position. Analyze what the apparently unfavorable terms actually purchased, in strategic terms.",
     hints: ["List what the treaty bought that raw terms don't show: a ten-year truce, recognition as a treaty party, and freedom to redirect attention elsewhere.", "Second-order: peace enabled unimpeded outreach and alliances — the community grew more during the truce than in all the conflict years before it.", "Game-theoretically: signing bound the stronger party to terms it later broke — and breaking a public treaty handed the moral and political initiative to the other side."],
-    rubric: ["Looked past the surface terms to what the agreement structurally purchased", "Identified the second-order growth effect of peace itself", "Analyzed the treaty-breach dynamic: the violating party forfeits legitimacy", "Drew a transferable principle about trading visible concessions for structural position"],
+    rubric: ["I looked past the harsh-looking terms to what the treaty actually bought", "I saw the growth effect: peace let the community expand faster than conflict ever did", "I analysed the breach: whoever breaks a public deal hands the other side the moral high ground", "I wrote the general rule: trade visible concessions for lasting position"],
     modelAnswer: "The visible terms were the price; the purchase was structural: recognition as an equal treaty party, a truce that converted a military standoff into open competition for hearts and alliances — terrain where his position compounded fastest — and a public commitment that, when Mecca's side breached it, transferred legitimacy and initiative entirely. Within two years the balance had shifted so far that Mecca fell with almost no resistance. The principle: visible concessions can be cheap when they buy time, legitimacy, and the ability to compete on your strongest axis.",
     expertNote: "Evaluate agreements by the position they create, not the line items they contain — weaker parties especially should trade optics for structure." },
 
@@ -972,7 +972,7 @@ MTC_EXERCISES.push(
     title: "The Night Before Challenger",
     prompt: "The night before the 1986 Challenger launch, engineers argued the O-ring seals might fail in the forecast cold. Management asked them to 'prove it was unsafe' — reversing the usual burden of proof — and the launch proceeded. Analyze the two or three distinct failures of reasoning in that room.",
     hints: ["Start with the burden of proof: normally you prove a system safe to fly; that night, engineers had to prove it unsafe. What does that reversal do under incomplete data?", "'Normalization of deviance': previous flights had shown O-ring erosion and survived, so the anomaly was recategorized from 'warning' to 'normal.' Each safe return was treated as evidence of safety rather than survivorship.", "The data presentation mattered too: charts mixed flights with and without incidents, obscuring that every cold-temperature launch had shown damage."],
-    rubric: ["Identified the burden-of-proof reversal and why it's dangerous under uncertainty", "Explained normalization of deviance (past survival read as safety evidence)", "Noted the data-presentation failure obscuring the temperature signal", "Connected the failures into a systemic account, not one villain"],
+    rubric: ["I caught the flipped question: 'prove it's UNSAFE' instead of 'prove it's safe'", "I explained how surviving past warnings got read as 'so it must be fine'", "I noted the charts hid the cold-weather pattern", "I explained it as a system failing, not one villain"],
     modelAnswer: "Three interlocking failures: (1) the burden of proof flipped — under incomplete data, 'prove it's unsafe' guarantees launch, because absence of proof is inevitable; (2) normalization of deviance — prior O-ring erosion on missions that survived was reclassified as acceptable, mistaking survivorship for safety; (3) the evidence was presented in a form that buried the pattern — plotting all flights rather than damage-versus-temperature hid a signal that is unmistakable when plotted correctly. No one had to be malicious; the system's framing did the work.",
     expertNote: "Ask who holds the burden of proof in your decisions — whoever must prove the negative under time pressure has already lost the argument." },
 
@@ -980,7 +980,7 @@ MTC_EXERCISES.push(
     title: "New Coke's Winning Taste Tests",
     prompt: "In 1985 Coca-Cola reformulated Coke after 190,000+ taste tests showed people preferred the new, sweeter formula. The launch provoked public revolt, and the old formula returned within three months. The tests weren't fabricated — so what did they actually measure, and what did they miss?",
     hints: ["A sip test measures a sip: sweetness wins small samples but can lose a whole can, and the tests never asked people to live with the change.", "The tests measured taste preference; the purchase decision also runs on identity and attachment — 'they changed MY Coke' isn't a flavor judgment at all.", "Methodologically: the test never presented the real decision — 'this replaces the old one permanently' — so it validated a product no one was actually offered."],
-    rubric: ["Distinguished what the test measured (sip preference) from the real variable (living with a replacement)", "Identified the identity/attachment dimension the tests couldn't see", "Noted that the actual proposition — permanent replacement — was never tested", "Drew the general lesson about measurement validity"],
+    rubric: ["I separated what was measured (one sip) from what was decided (replacing Coke forever)", "I named what sip tests can't see: people's attachment to THEIR brand", "I noticed nobody was ever asked 'may we replace it permanently?'", "I wrote the lesson: precisely measuring the wrong thing is worse than not measuring"],
     modelAnswer: "The tests answered 'which sip tastes better?' with genuine rigor — but the launch asked 'will you accept your lifelong brand being replaced?' Sweetness wins sips and loses cans; more importantly, Coke drinkers' attachment was to identity, not formula, and no sip test can detect an emotion that only fires when something is taken away. The proposition that shipped — permanent replacement — was never the proposition tested. Rigorous measurement of the wrong variable is more dangerous than no measurement, because it arrives wearing the authority of data.",
     expertNote: "Before trusting any study, ask: is the thing measured actually the thing decided? Validity beats sample size — 190,000 answers to the wrong question is still the wrong question." }
 );
@@ -991,7 +991,7 @@ MTC_EXERCISES.push(
     title: "Advice You Give But Don't Take",
     prompt: "Name one piece of advice you regularly give others but don't follow yourself. Why does the gap exist — is the advice wrong, or is your reasoning different when it's your own case?",
     hints: ["Research calls this Solomon's paradox: people reason more wisely about others' problems than their own.", "For others you see the structure; for yourself you feel the exceptions ('my situation is different because...'). Write down your exception and test if you'd accept it from someone else.", "If you wouldn't accept your own excuse from a friend, the gap is motivated reasoning, not situational difference."],
-    rubric: ["Named a specific, real piece of advice with a real gap", "Articulated the exception you grant yourself", "Tested the exception: would you accept it from someone else?", "Concluded honestly whether the advice or the excuse is wrong"],
+    rubric: ["I named real advice I give but don't follow", "I wrote out the excuse I give myself", "I tested it: would I accept that excuse from a friend?", "I concluded honestly: is the advice wrong, or is my excuse?"],
     modelAnswer: "Scored on honesty and specificity. The strong move is stating your self-exception explicitly ('I don't need to write decisions down because I remember mine') and noticing you would never accept that sentence from the person you advise.",
     expertNote: "Distance improves reasoning — which is why writing about your own problem in the third person, or asking 'what would I tell a friend?', measurably improves the decision." },
 
@@ -999,7 +999,7 @@ MTC_EXERCISES.push(
     title: "Trace One Opinion to Its Sources",
     prompt: "Pick one opinion you hold with real confidence about a current topic. Trace where it actually came from: list the specific sources, and mark how many are independent of each other rather than echoes of one origin.",
     hints: ["Ten articles citing one study is one source wearing ten costumes.", "Trace upstream: who did the outlets get it from? Often a single report, press release, or viral thread is the sole ancestor.", "Calibrate confidence to independent sources: if the count is one, your confidence should reflect one source's reliability, not the volume of repetition."],
-    rubric: ["Traced an actual opinion to named sources, not vague 'the news'", "Distinguished independent sources from echoes of one origin", "Counted honestly — including if the answer was one", "Adjusted stated confidence to match the independent-source count"],
+    rubric: ["I traced one strong opinion back to its actual sources, by name", "I checked which sources are truly independent vs copies of one story", "I counted honestly — even if the answer was 'really just one source'", "I adjusted my confidence to match that count"],
     modelAnswer: "No universal answer — scored on the tracing. A common honest result: five remembered 'sources' collapse into one primary study or event, filtered through outlets that amplified each other. That doesn't make the opinion wrong; it means your confidence was priced off repetition, not evidence.",
     expertNote: "Intelligence analysts formally track source independence for exactly this reason — 'multiple reports' from one origin is single-source reporting, and it's the standard mechanism of confident public error." },
 
@@ -1007,7 +1007,7 @@ MTC_EXERCISES.push(
     title: "The Decision You Didn't Make",
     prompt: "Recall a significant choice in your life that happened by default — you never actually decided; events, other people, or inertia decided. Was letting it happen the right call in hindsight, and did you know at the time that you were choosing by not choosing?",
     hints: ["Defaults are decisions with the accountability removed — staying in a job, a city, a habit is chosen daily by not leaving.", "Distinguish deliberate delegation ('I trust this to unfold') from avoidance ('deciding felt costly, so I didn't').", "The test isn't whether it turned out fine — it's whether you'd endorse the process that produced it."],
-    rubric: ["Identified a real default-decision, not a trivial one", "Classified it honestly: delegation vs avoidance", "Separated the outcome from the process", "Stated what an active decision would have required at the time"],
+    rubric: ["I found a big choice in my life that happened by default", "I was honest: did I trust the drift, or dodge the decision?", "I judged the deciding process separately from how it turned out", "I wrote what actively deciding would have required back then"],
     modelAnswer: "Scored on honesty. Strong answers admit the moment of avoidance — 'renewing felt easier than evaluating' — and judge the process, not the luck of the result.",
     expertNote: "Inaction is the most common important decision, and the least examined — auditing your defaults once a year finds choices that no one, including you, ever actually made." },
 
@@ -1015,7 +1015,7 @@ MTC_EXERCISES.push(
     title: "What Would Tell You You're on the Wrong Path?",
     prompt: "Consider your current main path — career, project, or study. Specify in advance: what observable evidence, appearing in the next 12 months, would tell you it's the wrong path? When did you last actually check for it?",
     hints: ["If nothing could count as evidence against the path, you're navigating by commitment, not by feedback.", "Good signals are observable and dated: 'no growth in X by June', 'still dreading Mondays after the role change', 'the market shrank again'.", "Then the harder half: is there a scheduled moment where you'd actually look? Unscheduled checks silently never happen."],
-    rubric: ["Specified concrete, observable disconfirming evidence", "Attached a timeframe to the evidence", "Honestly answered when the last real check happened", "Committed to a checking mechanism, not just an intention"],
+    rubric: ["I named specific evidence that would say 'wrong path' (not vague feelings)", "I gave it a deadline (e.g. 'by June')", "I admitted when I last actually checked", "I set a real reminder or moment to check, not just an intention"],
     modelAnswer: "Scored on specificity. The strong pattern is a tripwire: 'If [measurable signal] hasn't happened by [date], I re-decide.' Vague vigilance doesn't work because motivated reasoning filters what you notice; pre-commitment beats willpower.",
     expertNote: "This is a personal pre-registration — deciding in advance what would change your mind, before the evidence arrives and your defenses are up." },
 
@@ -1024,7 +1024,7 @@ MTC_EXERCISES.push(
     title: "Zero-Budget Launch",
     prompt: "You must get a new product's first 100 customers with literally zero marketing spend. Generate at least 6 genuinely different approaches — different mechanisms, not variations of 'post on social media.'",
     hints: ["Vary the mechanism: borrowing someone else's audience, making one customer's result visible, manual outreach, communities, partnerships, built-in virality.", "Constraints are generative: 'no budget' rules out the lazy default and forces channels most competitors never work hard at.", "Judge afterwards, not during — a weird idea (personally onboarding each user, doing the service manually first) may be the best one at n=100."],
-    rubric: ["Generated 6+ approaches with genuinely different mechanisms", "No idea was a paid channel in disguise", "At least one idea exploits doing unscalable things at small scale", "Deferred judging until after generating"],
+    rubric: ["I listed 6 or more routes that work in genuinely different ways", "None of my ideas secretly needs an ad budget", "At least one idea is hands-on and unscalable — which is fine for the first 100 customers", "I generated first and judged only afterwards"],
     modelAnswer: "Strong sets span mechanisms: direct outreach to 100 named people; doing the work manually for the first users and converting the results into public case studies; a partnership that borrows an existing audience; building in public; answering questions where the target users already gather; making the product's output shareable so each user recruits the next.",
     expertNote: "At 100 customers the scalable channels don't matter yet — the classic advice holds: do things that don't scale, because unscalable effort is a moat precisely while you're small." },
 
@@ -1032,7 +1032,7 @@ MTC_EXERCISES.push(
     title: "Design the Worst Onboarding",
     prompt: "Design the worst possible first-time experience for a new app — at least 6 specific choices that would maximize abandonment. Then invert each into a design principle.",
     hints: ["Go concrete: what exactly happens in the first 60 seconds of the worst version?", "Classics: demand an account before showing any value, a 12-field form, permissions requests with no context, a tutorial that can't be skipped, jargon, and an empty screen at the end.", "The inversion is the payoff: each sin, flipped, is a principle — 'value before signup', 'ask for permissions at the moment they're needed', 'land the user in a ready-made example, never an empty state'."],
-    rubric: ["Listed 6+ concrete abandonment-maximizing choices", "The choices are specific behaviors, not vague badness", "Inverted each into a stated principle", "At least one inversion is non-obvious (e.g. empty-state design)"],
+    rubric: ["I designed 6 or more specific ways to lose the user fast", "Each is a concrete choice (a 12-field form), not just 'make it bad'", "I flipped every sin into a rule for good design", "At least one flipped rule genuinely surprised me"],
     modelAnswer: "Worst version: force account creation first, 12-field form, three permission popups on launch, unskippable 9-step tutorial, jargon-heavy labels, end on a blank screen with no next action. Inverted: show value before asking for anything; collect only what the next step needs; request permissions in context; let users skip everything; speak plainly; never land anyone on an empty state.",
     expertNote: "Inversion works because failure modes are more enumerable than success recipes — you can't list every way to delight a user, but you can list the ways to lose them, and avoiding those is most of the job." },
 
@@ -1040,7 +1040,7 @@ MTC_EXERCISES.push(
     title: "The Product, Time-Shifted",
     prompt: "Take a product you use daily. Design its equivalent for the year 1900, then for 2100. What survives all three eras is the underlying need — name it, and note which parts of today's product are just current-technology accidents.",
     hints: ["Separate the job from the machinery: a navigation app's job — 'get me there without knowing the way' — was done in 1900 by printed guides, porters, and asking locals.", "For 2100, resist just adding tech: ask what constraint that shapes today's version might be gone entirely (screens? ownership? attention?).", "The parts that change across all three versions are implementation details; whatever must exist in all three is the actual product."],
-    rubric: ["Produced concrete 1900 and 2100 versions, not vague gestures", "Named the invariant underlying need across all three", "Identified specific current features as technology accidents", "The 2100 version removes a constraint rather than just adding gadgets"],
+    rubric: ["I designed real 1900 and 2100 versions, not vague gestures", "I named the human need that survives all three eras", "I pointed at today's features that are just current-technology accidents", "My 2100 version removes a limitation instead of adding gadgets"],
     modelAnswer: "Example — music streaming. 1900: sheet music subscriptions, player pianos, the family performing at home. 2100: perhaps ambient, context-generated music with no 'catalog' at all. The invariant: on-demand emotional regulation and shared atmosphere through music. Today's playlists, catalogs, and shuffle are artifacts of recording-era licensing and storage — the need never mentions any of them.",
     expertNote: "Time-shifting is first-principles thinking disguised as a game: any feature that can't survive translation across eras was never the product — it was scaffolding." },
 
@@ -1048,7 +1048,7 @@ MTC_EXERCISES.push(
     title: "Steal From Another Industry",
     prompt: "Pick a practice that one industry has refined for decades — a chef's mise en place, aviation checklists, hospital triage, theater rehearsals, restaurant service briefings. Transplant it into your own work with 3 concrete adaptations.",
     hints: ["Identify what problem the practice actually solves in its home industry (mise en place solves: no mid-task interruptions to fetch things).", "Match on problem structure, not surface: triage fits any situation with more incoming demands than capacity and unequal stakes.", "Make the adaptations concrete enough to start tomorrow: what exactly is your 'station', your 'checklist', your 'triage category'?"],
-    rubric: ["Named the underlying problem the practice solves at home", "Matched it to a structurally similar problem in your work", "Gave 3 adaptations concrete enough to start immediately", "Avoided surface mimicry (renaming meetings 'briefings' changes nothing)"],
+    rubric: ["I named the problem the practice solves in its home industry", "I found the same-shaped problem in my own work", "My 3 adaptations are concrete enough to start tomorrow", "I copied the mechanism, not just the vocabulary"],
     modelAnswer: "Example — mise en place for knowledge work: (1) before starting any deep-work block, stage everything the task needs (docs open, questions answered, materials gathered) so the block is never interrupted by fetching; (2) a 'station check' each morning: tomorrow's meetings each get their materials prepared today; (3) a hard rule that preparation and execution are separate activities scheduled separately, as kitchens do.",
     expertNote: "Mature industries have paid decades of tuition on their core problem — cross-industry theft is the highest-return creative act because the R&D is already done and your competitors aren't looking there." },
 
@@ -1057,7 +1057,7 @@ MTC_EXERCISES.push(
     title: "Two Guards, Two Doors",
     prompt: "Two doors: one to freedom, one to a trap. Two guards: one always lies, one always tells the truth — you don't know which is which. You may ask ONE guard ONE question. What question guarantees you find the freedom door, and why does it work?",
     hints: ["A direct question fails because you don't know if the answer is inverted. You need a question that forces both guard types to give the same answer.", "Route the question through both guards: ask one what the OTHER would say.", "'If I asked the other guard which door leads to freedom, what would they point to?' — then take the opposite door. Truth-teller reports the liar's wrong answer; liar lies about the truth-teller's right answer. Both point at the trap."],
-    rubric: ["Constructed a question routed through both guards (or an equivalent self-referential form)", "Explained why both guard types give the same (inverted) answer", "Stated the decision rule: take the opposite door", "Traced both cases (asked the liar / asked the truth-teller) explicitly"],
+    rubric: ["My question routes through BOTH guards ('what would the other one say?')", "I explained why both guards end up pointing at the same door", "I stated the rule: walk through the OTHER door", "I traced both cases: asked the liar, asked the truth-teller"],
     modelAnswer: "Ask either guard: 'If I asked the other guard which door leads to freedom, which would they indicate?' — then walk through the other door. If you asked the truth-teller, they truthfully report the liar's false pointer (trap). If you asked the liar, they lie about the truth-teller's true pointer (trap again). The composition of one lie and one truth is always exactly one inversion, so the answer is reliably wrong — which makes it reliably useful.",
     expertNote: "The general trick: when a channel has unknown polarity, build a question where every path passes through the distortion an odd number of times — the output becomes predictable even though the source isn't." },
 
@@ -1065,7 +1065,7 @@ MTC_EXERCISES.push(
     title: "The Night Taxi",
     prompt: "In a city, 85% of taxis are Green and 15% are Blue. A taxi was involved in a night hit-and-run. A witness says it was Blue, and testing shows the witness correctly identifies taxi colors at night 80% of the time. What's the probability the taxi was actually Blue? Work it through before checking.",
     hints: ["Don't jump to 80% — that ignores how rare Blue taxis are. Start from the base rate: 15 of every 100 taxis are Blue.", "Count both ways the witness says 'Blue': correctly seeing a Blue taxi (15 × 0.8 = 12) and mistaking a Green one (85 × 0.2 = 17).", "P(Blue | says Blue) = 12 / (12 + 17) ≈ 41%. The taxi is more likely Green even though the witness is 80% reliable."],
-    rubric: ["Started from the base rate, not the witness accuracy", "Computed both paths to a 'Blue' report (true and false positives)", "Reached ≈41% (12 / 29)", "Articulated why the answer feels wrong (accuracy dominates intuition; base rate dominates reality)"],
+    rubric: ["I started from how rare Blue taxis are (15%), not from the witness's 80%", "I counted both ways a 'Blue' report can happen: right about a Blue (12 in 100) and wrong about a Green (17 in 100)", "I got roughly 41% — so the taxi is actually MORE likely Green", "I explained why the answer feels wrong but is right"],
     modelAnswer: "Out of 100 taxis: the witness correctly calls 12 of the 15 Blues 'Blue', and wrongly calls 17 of the 85 Greens 'Blue.' Given a 'Blue' report, the probability it's true is 12/(12+17) ≈ 41%. The witness's 80% accuracy is real, but Green taxis are so common that their 20% error rate produces more false 'Blue' reports than the Blues produce true ones.",
     expertNote: "This is Kahneman and Tversky's classic demonstration that evidence quality and prior rarity must be combined — a reliable witness to a rare event is routinely, mathematically, probably wrong." },
 
@@ -1073,7 +1073,7 @@ MTC_EXERCISES.push(
     title: "The Missing Dollar",
     prompt: "Three guests pay $30 for a room ($10 each). The manager realizes it should be $25 and sends back $5 with the bellboy, who pockets $2 and returns $1 to each guest. Now the guests paid $9 each = $27, plus the bellboy's $2 = $29. Where is the missing dollar?",
     hints: ["Before hunting the dollar, check whether the puzzle's final addition is a legitimate operation at all.", "The $27 the guests paid already CONTAINS the bellboy's $2 (manager holds $25 + bellboy $2 = $27). Adding the $2 again double-counts it.", "The honest ledger: guests out $27; hotel has $25, bellboy $2. And $27 + their $3 refund = the original $30. Nothing is missing."],
-    rubric: ["Recognized the final addition as the flaw, not the arithmetic before it", "Explained the double-count: the $2 is inside the $27", "Produced the correct ledger showing all $30 accounted for", "Named the general lesson: a confidently framed wrong operation smuggles in the error"],
+    rubric: ["I found the trick in the LAST step: adding two numbers that shouldn't be added", "I explained the double-count: the bellboy's $2 is already inside the $27", "I wrote the honest ledger: $25 hotel + $2 bellboy + $3 refunds = $30", "I named the lesson: the puzzle does the wrong math FOR you, in a confident voice"],
     modelAnswer: "There is no missing dollar — the puzzle's last step adds two numbers that don't belong on the same side of the ledger. The guests are out $27, which splits into $25 (hotel) + $2 (bellboy); their $3 in refunds completes the original $30. Adding $27 + $2 double-counts the bellboy's money and then treats the meaningless $29 as if it should equal $30.",
     expertNote: "The puzzle works because it performs the invalid step FOR you in a confident voice — the everyday version is any analysis that hands you a pre-framed comparison and asks only for your conclusion." },
 
@@ -1081,7 +1081,7 @@ MTC_EXERCISES.push(
     title: "The Bar Check",
     prompt: "Four people at a bar: one is drinking beer, one drinking cola, one is 17, one is 23. Rule: 'If someone is drinking alcohol, they must be over 18.' Whom must you check, and no one else? Then: why do most people solve this instantly, yet fail the logically identical abstract card version?",
     hints: ["Check whoever could VIOLATE the rule: the beer drinker (how old?) and the 17-year-old (drinking what?).", "The cola drinker and the 23-year-old can't violate an alcohol→adult rule no matter what else is true of them.", "This is the Wason task in social clothing — humans have sharp cheater-detection intuitions that don't transfer to abstract 'if even then red' framings."],
-    rubric: ["Selected exactly the beer drinker and the 17-year-old", "Explained why the other two are irrelevant", "Connected it to the abstract card task's identical structure", "Explained the gap: social rule-violation framing recruits intuitions abstraction doesn't"],
+    rubric: ["I checked exactly two people: the beer drinker and the 17-year-old", "I explained why the other two can't possibly break the rule", "I saw it's the same puzzle as the card version most people fail", "I explained why catching rule-breakers feels easy while abstract logic doesn't"],
     modelAnswer: "Check the beer drinker's age and the 17-year-old's drink — only they can violate the rule. The 23-year-old may drink anything; the cola drinker may be any age. The structure is identical to the abstract card task most people fail, and the difference is framing: presented as catching rule-breakers, the mind effortlessly looks for violations; presented abstractly, it slides into seeking confirmations.",
     expertNote: "A practical trick falls out of this: when a logical problem confuses you, recast it as 'who could be cheating?' — the social framing borrows machinery your abstract reasoning lacks." }
 );
@@ -1092,7 +1092,7 @@ MTC_EXERCISES.push(
     title: "The Other Buyer",
     prompt: "You've found a home you love. Your agent — who earns more if you pay more — tells you another buyer is preparing an offer. You can't verify this. How do you decide what to bid without the claimed rival deciding for you?",
     hints: ["Set your walk-away number BEFORE engaging with the pressure, from comparables and your finances — not from the auction dynamics.", "The claim's key property: you can't verify it, and the person relaying it profits if it moves you. That doesn't make it false — it makes it non-evidence.", "Decide as if both worlds are possible: a bid you'd regret in the no-rival world is too high; losing the house at your true maximum is the acceptable outcome, not a failure."],
-    rubric: ["Committed to a pre-analysis maximum derived from comparables and budget", "Treated the unverifiable claim as non-evidence rather than as false", "Noticed the messenger's incentive alignment", "Accepted losing at the true maximum as a correct outcome"],
+    rubric: ["I set my absolute maximum price BEFORE reacting to the rival-buyer claim", "I treated the unverifiable claim as noise — not true, not false, just unusable", "I noticed the agent earns more if I panic", "I accepted that losing the house at my limit is the plan working, not failing"],
     modelAnswer: "Fix your maximum before the emotional auction starts, from comparables and what you can carry — then the rival claim, true or not, changes nothing: you bid up to your number and stop. The claim is unverifiable and delivered by someone who profits from your urgency, so it can't function as evidence. If someone genuinely outbids your true maximum, the process worked: the house was worth more to them than to you.",
     expertNote: "Auction pressure converts 'what is this worth to me?' into 'what does it take to win?' — the entire defense is deciding the first question while you can still think, and treating the second as noise." },
 
@@ -1100,7 +1100,7 @@ MTC_EXERCISES.push(
     title: "Build or Buy",
     prompt: "Your startup needs internal analytics. Build in-house: ~3 engineer-months, full control. Buy: $30k/year, live next week, less flexible. Structure the decision properly — including the costs that don't appear in either price tag.",
     hints: ["The build option's real price is opportunity cost: what would those 3 engineer-months produce if aimed at the product instead?", "Include the tail: built software needs maintenance forever (often 20%+ of build cost yearly); bought software carries vendor risk and integration limits.", "The strategic question that usually decides it: is analytics part of your differentiation, or undifferentiated plumbing? Build your moat; buy your plumbing."],
-    rubric: ["Priced the build option in opportunity cost, not just salary time", "Included ongoing maintenance and vendor-risk tails on each side", "Applied the core-vs-plumbing (differentiation) test", "Reached a conditional recommendation, stating what would flip it"],
+    rubric: ["I priced building as 'what else those 3 engineer-months could have built'", "I included the long tails: maintaining it forever vs being locked to a vendor", "I asked the key question: is this our special sauce, or just plumbing?", "My recommendation states what would flip it the other way"],
     modelAnswer: "The visible comparison ($30k vs 3 months) omits the decisive terms. Build really costs 3 months of forgone product progress plus permanent maintenance; buy costs $30k plus lock-in and edge-case inflexibility. The tiebreaker is strategic: if analytics is undifferentiated plumbing for you, buy it and spend your scarcest resource — engineering attention — on what customers actually choose you for. Flip to build only if analytics IS the product, or the vendor's ceiling provably blocks a core need.",
     expertNote: "In build-vs-buy, engineer time is almost never the scarce resource being spent — focus is. The common failure is building plumbing because building is fun and the invoice for lost focus never arrives." },
 
@@ -1108,7 +1108,7 @@ MTC_EXERCISES.push(
     title: "Premortem on the Perfect Hire",
     prompt: "Your team is about to make a senior hire everyone is excited about. Before the offer goes out, run a premortem: it's 12 months later and the hire has failed badly. Write the three most plausible reasons why — and what check each implies you should run now.",
     hints: ["The premortem's power: 'imagine it HAS failed' licenses the doubts that excitement was suppressing.", "Senior-hire failure modes cluster: skills validated but context transfer fails (big-company habits at a startup); the role was never actually agreed on; chemistry with a key person; the excitement was halo from one impressive trait.", "Each imagined failure implies a present-tense check: reference questions about context, a written 90-day expectations doc both sides sign, a working session before the offer."],
-    rubric: ["Generated 3 distinct, plausible failure narratives", "Failure modes go beyond 'turned out bad' to specific mechanisms", "Derived a concrete pre-offer check from each", "Noted the halo risk in 'everyone is excited'"],
+    rubric: ["I wrote 3 different, believable ways the hire fails", "Each failure explains WHO does WHAT — 'bad fit' or 'too much pressure' don't count on their own", "Each failure gave me a specific check to run BEFORE sending the offer", "I flagged the danger sign hiding in 'everyone is excited'"],
     modelAnswer: "Example: (1) Their success was powered by infrastructure their old company provided — check by probing references on what they built alone vs inherited. (2) Each interviewer imagined a different job for them — check by writing the 90-day outcomes doc now and getting both sides to sign it. (3) Unanimous excitement traces to one dazzling trait (pedigree, charisma) haloing everything else — check by re-scoring the scorecard dimensions independently before the offer.",
     expertNote: "Klein's premortem works because it flips the social gradient: in a normal meeting doubt is disloyalty, in a premortem imagination of failure is the assignment — same brains, opposite permission." },
 
@@ -1116,7 +1116,7 @@ MTC_EXERCISES.push(
     title: "One-Way and Two-Way Doors",
     prompt: "You're choosing between two offers: a promotion at home, or a bigger role abroad requiring relocation. Classify the components of each choice as reversible or irreversible, and explain how reversibility should change the confidence you need before deciding.",
     hints: ["Decompose: the job itself is usually reversible (jobs change); selling a home, a partner's career break, kids changing schools, pension/visa clocks are harder to unwind.", "The rule: two-way doors deserve fast decisions at ~70% confidence — you can walk back; one-way doors deserve slow decisions and higher bars.", "Second-order: the abroad option also OPENS doors (networks, optionality) that not-going closes silently — staying is not the zero-risk baseline it feels like."],
-    rubric: ["Decomposed both options into reversible and irreversible components", "Applied differential confidence: fast on two-way doors, slow on one-way", "Identified the hidden irreversibility of staying (options that expire)", "Avoided treating the status quo as risk-free"],
+    rubric: ["I split each option into parts I can undo and parts I can't", "I decided fast on the undoable parts, carefully on the permanent ones", "I spotted what staying home quietly loses forever (the offer may never return)", "I refused to treat 'stay' as the zero-risk option"],
     modelAnswer: "Most of the abroad decision is a two-way door — roles, cities, even countries can be walked back — but embedded in it are one-way components (a partner's career interruption, kids' schooling windows, selling property) that deserve the real scrutiny. Meanwhile staying carries its own quiet irreversibility: the window for the international role may not reopen. Decide the reversible bulk at 70% confidence and speed; negotiate or de-risk only the genuinely one-way parts (rent don't sell, sabbatical not resignation for the partner).",
     expertNote: "Bezos's door heuristic matters most in its second application: people over-deliberate reversible choices and — because staying feels safe — never notice the one-way doors that close on their own schedule." },
 
@@ -1125,7 +1125,7 @@ MTC_EXERCISES.push(
     title: "More or Less Than Two Weeks?",
     prompt: "A manager asks an engineer: 'Will this take more or less than two weeks?' Name the bias this phrasing plants, explain how it distorts the estimate, and propose a better way to ask.",
     hints: ["The number in the question doesn't vanish — it becomes the reference point the answer adjusts from.", "Anchoring: estimates gravitate toward two weeks whether or not it has any relation to the task; adjustment away from an anchor is systematically insufficient.", "Better elicitation gets an unanchored view first: 'Walk me through the pieces and give me your range' — or ask for 10th and 90th percentile dates rather than one number."],
-    rubric: ["Named anchoring specifically", "Explained insufficient adjustment from the planted reference point", "Proposed an unanchored elicitation (open decomposition or percentile range)", "Noted the manager anchors the estimate even with good intentions"],
+    rubric: ["I named it: anchoring", "I explained that estimates drift toward the mentioned number and don't drift back enough", "My better question mentions NO number ('walk me through the parts, then give me a range')", "I noted the manager biases the answer even while meaning well"],
     modelAnswer: "The question anchors the estimate at two weeks: the engineer now adjusts from the manager's number instead of building one from the task, and adjustment away from anchors is reliably too small. Better: 'Break it into parts and give me a range you'd bet on' — asked before any number is mentioned. If you want calibration, ask for the date they're 90% sure it's done by, not the date it 'should' be done.",
     expertNote: "Anchors work even when everyone knows they're arbitrary — the only reliable defense in estimation is to keep the first number out of the room until the estimator produces one." },
 
@@ -1133,7 +1133,7 @@ MTC_EXERCISES.push(
     title: "The Room That Agreed Too Fast",
     prompt: "In a planning meeting, the most senior person speaks first and endorses a risky plan. Within ten minutes everyone has agreed and the meeting ends early. Name the dynamics at work and propose one structural change that would surface real dissent.",
     hints: ["Two forces compound: the senior opinion anchors the discussion, and visible early consensus makes dissent socially expensive for each next speaker.", "Fast unanimous agreement on a RISKY plan is a signal of process failure, not plan quality — genuine evaluation of risk produces friction.", "Structural fixes beat exhortation: collect written positions before anyone speaks, have the senior person speak last, or assign a rotating devil's advocate with real license."],
-    rubric: ["Named both dynamics: authority anchoring and conformity cascade", "Identified fast unanimity on a risky call as a warning sign in itself", "Proposed a structural fix (silent written first-positions, boss speaks last, assigned dissenter)", "Explained why 'please speak up' fails without structure"],
+    rubric: ["I named both forces: the boss's opinion sets the tone, then each agreement makes disagreeing harder", "I flagged fast unanimous agreement on a RISKY plan as itself a warning sign", "My fix changes the process (write views down first, boss speaks last, assign a challenger)", "I explained why just saying 'feel free to disagree' changes nothing"],
     modelAnswer: "The senior endorsement anchors the room, then each agreement raises the social price of the next dissent — a conformity cascade that can produce unanimity nobody privately holds. Fix it structurally: everyone writes their position and top risk BEFORE discussion opens, the senior person speaks last, and someone is formally assigned to argue the against-case. Asking people to 'feel free to disagree' changes nothing, because the cost of dissent is structural, not emotional.",
     expertNote: "Groupthink is an information-destruction machine: the room ends up knowing less than the sum of what its members walked in knowing. Structure is the only fix because the silencing mechanism is itself invisible to the participants." },
 
@@ -1141,7 +1141,7 @@ MTC_EXERCISES.push(
     title: "The Halo on the Review",
     prompt: "An employee closed one spectacular deal this year. In their performance review, the manager rates them highly on communication, teamwork, and reliability — dimensions unrelated to the deal, with no specific evidence. Name the bias and design a review process that resists it.",
     hints: ["One vivid positive trait is bleeding into unrelated ratings — the manager is rating a glow, not the dimensions.", "The halo effect: global impressions contaminate specific judgments, in both directions (one visible failure works the same way negatively).", "The resistant process rates each dimension independently, evidence-first: write the specific observed behaviors per dimension BEFORE assigning any score, and rate one dimension across all employees at a time rather than one employee across all dimensions."],
-    rubric: ["Named the halo effect", "Recognized it operates in both directions (horns effect too)", "Proposed evidence-before-scores as the core fix", "Included the dimension-at-a-time (not person-at-a-time) rating structure"],
+    rubric: ["I named it: the halo effect", "I noted it also works in reverse (one failure darkens everything)", "My fix: write the evidence for each skill BEFORE giving any score", "I added: rate one skill across everyone, instead of one person across all skills"],
     modelAnswer: "This is the halo effect: one salient success creates a global glow that fills in every unrated dimension. The resistant design: require written behavioral evidence per dimension before any number is entered; rate dimension-by-dimension across all employees rather than person-by-person, so each judgment competes against comparable evidence; and flag any review where all dimensions received the same score — a uniform profile is the halo's fingerprint.",
     expertNote: "Thorndike documented this in 1920 in military ratings — a century later it still drives most unstructured evaluation, hiring and promotion included. Uniformly high or low ratings across unrelated traits should trigger suspicion, not confidence." },
 
@@ -1149,7 +1149,7 @@ MTC_EXERCISES.push(
     title: "A Hundred Successful Founders",
     prompt: "A bestselling book reports: 'I interviewed 100 successful founders — 90% wake before 6am. Early rising is the founders' secret.' Identify every distinct methodological failure packed into this claim.",
     hints: ["Start with who was interviewed: only successes. What would the failed founders — never interviewed — have reported?", "No control group: what fraction of UNSUCCESSFUL founders, or the general population of ambitious people, wake before 6am? Without that, 90% means nothing.", "Even granting the correlation: direction unknown (does rising early cause success, or do driven people do both?), plus self-report inflation on virtuous habits."],
-    rubric: ["Named survivorship bias (failures were never sampled)", "Named the missing control group and why 90% is uninterpretable without it", "Named the correlation/causation gap and a plausible common cause", "Added self-report bias on socially admired habits"],
+    rubric: ["I spotted that failed founders were never interviewed", "I asked the missing question: how many UNsuccessful people also wake at 6am?", "I offered a common cause: driven people both wake early AND push hard", "I added: people exaggerate impressive habits to interviewers"],
     modelAnswer: "At least four failures: (1) survivorship — failed founders weren't interviewed and may wake just as early; (2) no baseline — if 90% of all driven professionals wake early, the finding is zero information; (3) causal direction — ambition plausibly causes both the waking hour and the success; (4) self-report — people inflate virtuous habits to interviewers. The observation is compatible with early rising helping, hurting, or being pure costume.",
     expertNote: "The success-literature formula is precisely this stack of errors, sold as research — the tell is that its 'findings' are always flattering habits readers can adopt, never boring structural advantages they can't." },
 
@@ -1158,7 +1158,7 @@ MTC_EXERCISES.push(
     title: "The Chart That Shouts",
     prompt: "A slide shows a bar chart titled 'Profit DOUBLED under new leadership!' The y-axis runs from 48 to 52 ($M). What is the chart actually showing, and what's your checklist for reading any chart before trusting it?",
     hints: ["Read the axis: from 48 to 52, a bar twice as tall means going from ~49 to ~51 — about a 4% change drawn as a 2x change.", "The truncated axis isn't lying about the numbers — it's lying about the VISUAL, which is what viewers remember.", "A minimal chart checklist: where does the axis start; what are the units; what timeframe was chosen (and what was left out); absolute or per-something; who chose these bounds and why."],
-    rubric: ["Decoded the actual change (~4%) behind the visual doubling", "Explained that the deception is visual while the data is technically true", "Produced a reusable checklist (axis origin, units, timeframe, denominator)", "Asked who selected the frame and what they gain"],
+    rubric: ["I worked out the real change: about 4%, drawn to look like a doubling", "I saw the numbers are true — it's the PICTURE that lies", "I wrote my chart checklist: where the axis starts, units, time window, per-what", "I asked who made the chart and what they want me to conclude"],
     modelAnswer: "Profit rose roughly 4% — from about $49M to $51M — but truncating the y-axis at 48 renders that as a doubling of bar height, and bar height is what the audience takes home. Checklist for any chart: (1) does the value axis start at zero, and if not, why; (2) units and scale; (3) why this timeframe — what happens if you widen it; (4) raw or per-capita/per-dollar; (5) who made it and what conclusion pays them.",
     expertNote: "Truncated axes are the most common honest-numbers-dishonest-picture device in corporate life — the numbers survive an audit while the impression does the persuading." },
 
@@ -1166,7 +1166,7 @@ MTC_EXERCISES.push(
     title: "The Deadlier State",
     prompt: "'State A recorded 3,900 traffic deaths last year; State B only 410. State B's roads are clearly far safer.' What must you check before accepting this, and what comparisons would actually answer the safety question?",
     hints: ["Raw counts compare sizes, not risks — how many people (and how many miles driven) does each state have?", "If State A has 12x the population or vehicle-miles, its roads could be SAFER per mile despite 9.5x the deaths.", "The honest metrics: deaths per 100k residents, and better, per vehicle-mile traveled — then check composition (urban vs rural mix, weather) before crediting 'the roads'."],
-    rubric: ["Rejected the raw-count comparison and named the missing denominator", "Chose per-capita and per-vehicle-mile as the meaningful rates", "Showed the conclusion can invert once normalized", "Noted composition (urban/rural, weather) as the next confounder after normalizing"],
+    rubric: ["I rejected comparing raw death counts between different-sized states", "I asked for rates instead: per person, and per mile driven", "I showed the verdict can FLIP once you divide properly", "I noted even the rates need care: city vs rural roads, weather"],
     modelAnswer: "Raw death counts measure state size more than road safety. Normalize twice: per resident, then per vehicle-mile driven (exposure). A large state can have 9.5x the deaths and still be safer per mile. Even after normalizing, composition matters — rural highways, weather, and truck traffic differ — so 'the roads are safer' needs like-for-like comparison, not a headline subtraction.",
     expertNote: "Any comparison of raw counts between differently-sized groups is a size measurement in costume — 'per what?' is the first question, and the answer usually reverses at least one headline a week." },
 
@@ -1174,7 +1174,7 @@ MTC_EXERCISES.push(
     title: "Said, Claimed, Admitted",
     prompt: "Two reports of the same interview: 'The CEO explained the layoffs were unavoidable' vs 'The CEO claimed the layoffs were unavoidable' vs 'The CEO admitted the layoffs were unavoidable.' Same quote, three verbs. Unpack what each verb instructs you to believe.",
     hints: ["The quote is identical — only the reporting verb changed. Yet each version arrives pre-judged.", "'Explained' presupposes the statement is true and informative; 'claimed' flags doubt; 'admitted' presupposes guilt or reluctant confession.", "These verbs are the journalist's verdict smuggled into the grammar — a reader absorbs the credibility framing without noticing a single opinion was expressed."],
-    rubric: ["Decoded the presupposition each verb carries (true / doubtful / guilty)", "Recognized the quote itself is identical across versions", "Identified this as evaluation smuggled into attribution grammar", "Stated the neutral alternative ('said') and when deviation from it is a tell"],
+    rubric: ["I decoded each verb: 'explained' = true, 'claimed' = doubtful, 'admitted' = guilty", "I noticed the quote is word-for-word identical in all three", "I saw the writer's verdict hiding inside the reporting verb", "I named the neutral verb ('said') and now treat departures from it as a signal"],
     modelAnswer: "'Explained' certifies the statement (true, helpful); 'claimed' inserts a raised eyebrow (unverified, dubious); 'admitted' convicts (a reluctant confession of something discreditable). None of these is opinion, technically — the judgment rides inside the attribution verb, below the reader's radar. 'Said' is the neutral baseline; every departure from it is the writer telling you what to conclude, and consistent departures in one direction reveal the outlet's stance more reliably than its editorials.",
     expertNote: "Attribution verbs are the cheapest bias detector available: scan any article and list them — the pattern of who 'explains' and who 'claims' is the house position in grammatical form." },
 
@@ -1182,7 +1182,7 @@ MTC_EXERCISES.push(
     title: "The Improved Response Time",
     prompt: "A support team reports 'average first-response time improved 40% this quarter' right after a new bonus was tied to that metric. Before celebrating, what should you inspect — in the data and in the behavior the bonus created?",
     hints: ["Averages hide shape: did the whole distribution improve, or did many instant auto-acknowledgements mask a worse tail? Check the median and the 90th percentile.", "Metrics with bonuses attached stop being measurements and start being targets — ask what the cheapest way to move THIS number is.", "Cheap moves: auto-replies that count as 'first response', cherry-picking easy tickets first, closing and reopening, or deflecting hard tickets to channels the metric doesn't see. Then check the companion metrics: resolution time and customer satisfaction."],
-    rubric: ["Asked for the distribution (median, tail), not just the mean", "Applied Goodhart's insight: an incentivized metric invites gaming", "Listed at least two concrete gaming mechanisms", "Named companion metrics (resolution, satisfaction) to test whether real service improved"],
+    rubric: ["I asked to see more than the average (the typical case and the worst cases)", "I applied the rule: pay people to move a number and they'll move THE NUMBER", "I listed two cheap tricks that improve the stat without helping customers", "I checked the honest neighbours: time-to-actually-fix and customer satisfaction"],
     modelAnswer: "First inspect shape: a 40% better average is compatible with a worse customer experience if instant auto-acknowledgements now count as responses while hard tickets wait longer — compare medians and 90th percentiles, not means. Then inspect incentives: with a bonus attached, the cheapest path to the number is gaming (auto-replies, easy-ticket cherry-picking, close-and-reopen). The verdict metrics are the un-incentivized companions: time-to-resolution and satisfaction. If those didn't move, the 40% is measurement theater.",
     expertNote: "Goodhart's law in operation: when a measure becomes a target, it ceases to be a good measure — the paired defense is always distributions over averages, and companion metrics the incentive doesn't touch." }
 );
@@ -1244,11 +1244,11 @@ MTC_BOSS_BATTLES.push(
     ],
     noPerfectAnswerNote: "Refusing to pay is collectively right and may be individually catastrophic for the patients in the building tonight; paying protects them and finances the next hundred attacks — the incentives are genuinely misaligned between this hospital and the world, and no framing dissolves that.",
     rubric: [
-      "Priced what could be priced and explicitly flagged what couldn't (patient harm)",
-      "Analyzed the signaling game with future attackers, not just this negotiation",
-      "Traced the upstream system failures (backups, restore testing, insurance incentives)",
-      "Explicitly named which thinking frameworks I applied",
-      "Held the individual-vs-collective misalignment honestly instead of declaring an easy answer",
+      "I put numbers where numbers work — and said plainly where they don't (patient harm)",
+      "I thought about the message paying sends to EVERY future attacker",
+      "I traced how old backups and easy insurance made this disaster likely long before tonight",
+      "I named the thinking tools I used",
+      "I faced it honestly: what's best for this hospital tonight isn't what's best for everyone",
     ],
     xpBase: 100 },
 
@@ -1262,11 +1262,11 @@ MTC_BOSS_BATTLES.push(
     ],
     noPerfectAnswerNote: "Every option moderates something: content, or trust. Acting decisively on unsettled science risks being confidently wrong with institutional force; not acting delegates public health to an outrage-maximizing algorithm — there is no neutral setting, because the feed itself is already an editorial policy.",
     rubric: [
-      "Mapped the amplification loops before evaluating interventions",
-      "Traced second-order effects of hard removal, including the partially-true scenario",
-      "Proposed confidence-scaled responses rather than certainty theater",
-      "Explicitly named which thinking frameworks I applied",
-      "Acknowledged that 'do nothing' is also an editorial choice with victims",
+      "I first mapped WHY the claim spreads (what the feed rewards)",
+      "I traced what banning causes next — including the case where the claim turns out partly true",
+      "My response scales with how sure we are, instead of pretending certainty",
+      "I named the thinking tools I used",
+      "I admitted 'do nothing' is also a choice that hurts people",
     ],
     xpBase: 100 },
 
@@ -1280,11 +1280,11 @@ MTC_BOSS_BATTLES.push(
     ],
     noPerfectAnswerNote: "If you build desalination and the rains return, you wasted billions visibly; if you bet on rain and lose, the city runs dry — the decision must be made 4 years before the information arrives, and whichever error occurs, the counterfactual will look obvious in hindsight to people who never faced the fork.",
     rubric: [
-      "Compared pricing and rationing on both efficiency and distributional fairness",
-      "Built genuinely distinct scenarios and separated robust moves from bets",
-      "Engaged the concentrated-now vs diffuse-later harm asymmetry explicitly",
-      "Explicitly named which thinking frameworks I applied",
-      "Accepted that the decision precedes the information and defended a choice anyway",
+      "I compared pricing vs rationing on efficiency AND on fairness to the poor",
+      "I separated moves that help in every future from moves that are bets on one future",
+      "I faced the clash: visible job losses now vs invisible thirst later",
+      "I named the thinking tools I used",
+      "I made a call even though the crucial information arrives too late — and defended it",
     ],
     xpBase: 100 }
 );
@@ -1303,7 +1303,7 @@ MTC_EXERCISES.push(
     title: "The Sixty-Second Sprint",
     prompt: "Pick any object you can see right now. Set a 60-second timer and write about it without stopping — no backspace, no pauses, no judging. If you stall, write 'and and and' until words return. Go.",
     hints: ["The only rule is motion: quality is banned for these 60 seconds.", "If you catch yourself rereading what you wrote, that's the editor interrupting the writer — eyes forward, keep typing.", "Stalling is normal; the 'and and and' trick keeps the motor running until retrieval catches up — the next word always comes."],
-    rubric: ["Wrote continuously for the full 60 seconds", "Never used backspace or rewrote anything", "Used a filler phrase instead of stopping when stalled", "Noticed (without obeying) the urge to edit mid-flow"],
+    rubric: ["I wrote non-stop for the full 60 seconds", "I never deleted or rewrote anything", "When stuck, I wrote filler ('and and and') instead of stopping", "I felt the urge to edit — and kept going anyway"],
     modelAnswer: "There's no content to get right — success is purely mechanical: sixty seconds of forward motion. Most people discover they wrote far more than expected, and that at least one usable phrase appeared that deliberate effort wouldn't have produced.",
     expertNote: "Freewriting works because generation and evaluation are competing processes — suppressing the judge for a fixed, safe interval is the most direct trainable fix for word-retrieval freeze." },
 
@@ -1311,7 +1311,7 @@ MTC_EXERCISES.push(
     title: "Plain Words Only",
     prompt: "Rewrite this sentence using only words a 12-year-old knows, keeping the full meaning: 'We need to leverage cross-functional synergies to operationalize our strategic learnings and drive stakeholder alignment.'",
     hints: ["Start by asking what the sentence actually claims happened or should happen — strip the costume before re-dressing it.", "Each jargon word hides a plain one: leverage=use, operationalize=actually do, alignment=agreement.", "A faithful plain version might be: 'The teams need to work together, use what we've learned, and get everyone to agree on the plan.' Shorter AND clearer is the goal."],
-    rubric: ["Identified what the sentence actually means before rewriting", "Every word in the rewrite is genuinely plain", "No meaning was lost (or you discovered there was little meaning to lose)", "The rewrite is shorter than the original"],
+    rubric: ["I first worked out what the sentence actually claims", "Every word in my rewrite is one a 12-year-old knows", "I kept the meaning — or discovered there wasn't much to keep", "My version is shorter than the original"],
     modelAnswer: "Something like: 'The teams should work together, use what we've learned, and get everyone to agree on the plan.' Often the exercise reveals the original said almost nothing — jargon frequently exists to disguise how little is being claimed.",
     expertNote: "Translating jargon to plain speech is the Feynman Technique applied to language itself — if you can't say it simply, you haven't finished thinking it." },
 
@@ -1319,7 +1319,7 @@ MTC_EXERCISES.push(
     title: "The Placeholder Drill",
     prompt: "Write a short paragraph about your week. Every time a word won't come, do NOT stop — type a bracket describing it, like [the word for being tired but wired], and keep moving. When the paragraph is done, go back and fill the brackets.",
     hints: ["The drill trains the separation: flow first, retrieval second.", "Make the placeholder descriptive — the description itself often summons the word before you even finish the bracket.", "When you return to fill brackets, notice how easily the words come without the sentence waiting on them — that ease is the whole lesson."],
-    rubric: ["Kept writing through every stall using brackets", "Placeholders described the missing word's meaning", "Filled the brackets afterwards", "Noticed retrieval was easier under no pressure"],
+    rubric: ["Every time a word stalled, I wrote a [bracket] and kept moving", "My brackets described the missing word's meaning", "I filled in the brackets at the end", "I noticed the words came easier once the sentence wasn't waiting on them"],
     modelAnswer: "Success is procedural: a finished paragraph, brackets used at every stall, then filled. Most people find the 'missing' words arrive within seconds once the sentence no longer depends on them — proof the block was pressure, not vocabulary.",
     expertNote: "This is how professional writers and simultaneous translators handle retrieval lag — decouple the pipeline, never let one missing token stall the stream." },
 
@@ -1327,7 +1327,7 @@ MTC_EXERCISES.push(
     title: "Twenty Associations",
     prompt: "Starting from the word BRIDGE, write a chain of 20 word associations as fast as you can — each word sparked by the previous one, no filtering, nonsense welcome. Then look back: mark the most surprising jump.",
     hints: ["Speed is the point; sense is optional. 'Bridge, river, bank, money...' — puns and sound-alikes count.", "If you stall, use the sound of the word (bridge → fridge) — phonetic jumps are legal and loosen the lexicon.", "The lookback matters: surprising jumps show your retrieval network taking paths your deliberate mind never books."],
-    rubric: ["Reached 20 words", "Did not censor or restart the chain", "Used at least one sound-based or 'silly' jump", "Identified the most surprising transition afterwards"],
+    rubric: ["I reached 20 words", "I never censored or restarted the chain", "At least one jump was by sound, or just silly", "I marked the most surprising jump afterwards"],
     modelAnswer: "Any 20-word chain succeeds. A typical one drifts through two or three semantic neighborhoods (bridge→river→boat... →card game→casino...) — that drift is your associative network warming up, which is precisely the machinery that fetches words while you type.",
     expertNote: "Word-association fluency correlates with faster lexical access generally — it's the closest thing to a direct gym exercise for the retrieval system itself." },
 
@@ -1335,7 +1335,7 @@ MTC_EXERCISES.push(
     title: "Say It Three Ways",
     prompt: "Take the idea 'the meeting was a waste of time' and express it three ways: (1) formally, for a report; (2) bluntly, to a friend; (3) as a vivid image or metaphor. Then pick which serves the idea best and say why.",
     hints: ["Same meaning, three costumes — the skill is realizing you always have more than one way in.", "For the metaphor, ask what the experience FELT like: an hour in traffic? A film with no plot?", "The convergent step is real: 'best' depends on audience and goal — name the criterion before picking."],
-    rubric: ["Produced three genuinely different registers", "The metaphor version is concrete, not just 'very unproductive'", "Named a criterion before choosing the best", "Noticed that generating alternatives was easier than finding one 'perfect' phrasing"],
+    rubric: ["I wrote ALL THREE versions — formal, blunt, and a picture/metaphor — and they sound clearly different from each other", "My metaphor paints an actual picture (a carousel, a traffic jam), not just stronger words", "Before picking a winner, I wrote down what 'best' means here (best for whom, for what?)", "I noticed that writing three options felt easier than hunting for one perfect sentence"],
     modelAnswer: "Example: (1) 'The meeting concluded without decisions or assigned actions.' (2) 'Two hours of my life I'm not getting back.' (3) 'It was a carousel — lots of motion, and we got off exactly where we got on.' Which is best depends on the reader — the report gets (1), the essay gets (3).",
     expertNote: "Writers who seem effortlessly articulate are usually just fast at generating three options and picking one — training the trio directly beats waiting for the single right phrase to descend." },
 
@@ -1343,7 +1343,7 @@ MTC_EXERCISES.push(
     title: "Explain It to a Ten-Year-Old",
     prompt: "Pick one thing from your work or studies that you handle every day. Explain it in three sentences a curious ten-year-old would follow — no field vocabulary allowed.",
     hints: ["Start from what the child already knows and build one step: 'You know how...?'", "Where you reach for a banned term, that's the exact spot your own understanding is leaning on a label instead of a mechanism.", "Analogies are your main tool — but check the analogy carries the true mechanism, not just a vibe."],
-    rubric: ["Three sentences, zero field vocabulary", "Built from something a child already knows", "The explanation carries the real mechanism, not just an image", "Noticed at least one spot where a label was hiding fuzzy understanding"],
+    rubric: ["I used exactly three sentences and no work jargon", "I started from something a 10-year-old already knows", "My explanation shows HOW it works, not just what it's like", "I found at least one word I struggled to replace — that's my fuzzy spot"],
     modelAnswer: "Judged by the constraint, not the topic. The tell of success: you found at least one word you couldn't easily replace — which located the exact boundary of your real understanding. That discovery is worth more than the explanation.",
     expertNote: "The Feynman Technique doubles as fluency training: plain-language constraints force active retrieval across your whole vocabulary instead of the same worn professional grooves." },
 
@@ -1351,7 +1351,7 @@ MTC_EXERCISES.push(
     title: "The Ugly First Draft",
     prompt: "Think of a message you've been putting off writing (an email, a difficult text, a post). Write the deliberately BAD version here — clumsy, blunt, unpolished — as fast as possible. Then read it back and honestly mark what's already usable.",
     hints: ["Giving yourself permission to write badly removes the exact pressure that was blocking you.", "Don't fix anything during the draft — badness is the assignment; fixing is a different activity for a different minute.", "On the read-back, most 'bad' drafts are 70% keepable — the blockage was never ability, it was the standard applied at the wrong stage."],
-    rubric: ["Actually wrote the dreaded message, start to finish", "Made no edits during the draft", "Marked the salvageable parts on read-back honestly", "Estimated what fraction was already usable"],
+    rubric: ["I actually wrote the message I'd been avoiding, start to finish", "I didn't edit anything while drafting", "Reading it back, I marked what's already usable", "I estimated how much survives (it's usually most of it)"],
     modelAnswer: "Success is a completed draft of a real message you'd been avoiding. The near-universal discovery: the ugly version is mostly fine, and fixing an existing draft takes a tenth of the energy that producing a 'perfect' one demanded.",
     expertNote: "Every professional writing process separates drafting from revising — the amateur mistake isn't bad first drafts, it's demanding the first and final draft be the same document." },
 
@@ -1359,7 +1359,18 @@ MTC_EXERCISES.push(
     title: "Speak First, Then Type",
     prompt: "Take any question from today's quest (or 'how was your week?'). Answer it OUT LOUD first — actually speak, to the room or under your breath. Then type what you said. Compare: was speaking easier than typing cold would have been?",
     hints: ["Speech retrieval and typing retrieval run on different rails — most people's spoken fluency is years ahead of their typed fluency.", "Don't compose while speaking; just answer like a person, then transcribe the good parts.", "If speaking was noticeably easier, you've found a permanent tool: draft by voice (or voice notes) whenever typing stalls."],
-    rubric: ["Actually spoke the answer aloud before typing", "Transcribed what was said rather than rewriting from scratch", "Compared the ease of the two honestly", "Identified whether voice-first should become a personal tool"],
+    rubric: ["I really said my answer out loud first", "I typed what I SAID, instead of composing from scratch", "I honestly compared: was speaking easier than typing cold?", "I decided whether talk-first should become my regular trick"],
     modelAnswer: "Most people find the spoken version came easier and sounded more natural — decades of conversation built that fluency. The practical takeaway: when typing stalls, switch channels; dictation or a voice note produces a draft your hands can then edit.",
     expertNote: "This is Rubber Ducking pointed at fluency instead of debugging: verbalizing recruits a stronger retrieval pathway, and the transcript smuggles that strength onto the page." }
 );
+
+/* ---------- Skill tracks: independent progress lanes over the frameworks ---------- */
+
+const MTC_SKILL_TRACKS = [
+  { id: "probabilistic", name: "Probabilistic", frameworks: ["probabilistic-thinking", "bayesian-thinking", "decision-theory", "risk-assessment"] },
+  { id: "systems", name: "Systems", frameworks: ["systems-thinking", "second-order-thinking", "root-cause-analysis", "scenario-planning"] },
+  { id: "causal", name: "Causal & Scientific", frameworks: ["scientific-thinking", "counterfactual-thinking", "abductive-reasoning", "deductive-reasoning", "inductive-reasoning", "analytical-thinking", "pattern-recognition"] },
+  { id: "adversarial", name: "Adversarial & Strategic", frameworks: ["red-team-thinking", "game-theory", "strategic-thinking", "intelligence-analysis", "entrepreneurial-thinking"] },
+  { id: "metacognition", name: "Metacognition", frameworks: ["meta-thinking", "cognitive-bias-detection", "critical-thinking", "survivorship-bias", "ethical-reasoning", "circle-of-competence"] },
+  { id: "creative", name: "Creative", frameworks: ["divergent-thinking", "convergent-thinking", "lateral-thinking", "design-thinking", "first-principles-thinking"] },
+];
