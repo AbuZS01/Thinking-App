@@ -62,6 +62,7 @@ const MTC = (() => {
       calibration: { answers: [], asked: [] },
       reviews: {}, // cardId -> {ease, interval, reps, due}
       reviewCount: 0,
+      trackXp: {}, // skillTrackId -> lifetime XP earned on that track
       newIntro: null, // {date, count} — caps new review cards introduced per day
       weaknessScores: {}, // frameworkId -> {attempts, totalScore}
       history: [], // {date, exerciseId, type, score, xp, hintsUsed}
@@ -230,6 +231,11 @@ const MTC = (() => {
   // Shared bookkeeping for every scored attempt (exercise or boss battle):
   // framework stats, history, streak, XP, level-ups, achievements, persistence.
   function applyAttempt(state, frameworks, historyEntry) {
+    for (const t of MTC_SKILL_TRACKS) {
+      if (frameworks.some((f) => t.frameworks.includes(f))) {
+        state.trackXp[t.id] = (state.trackXp[t.id] || 0) + historyEntry.xp;
+      }
+    }
     for (const fw of frameworks) {
       state.frameworkCounts[fw] = (state.frameworkCounts[fw] || 0) + 1;
       if (!state.weaknessScores[fw]) state.weaknessScores[fw] = { attempts: 0, totalScore: 0 };
@@ -253,7 +259,7 @@ const MTC = (() => {
     };
   }
 
-  function submitExercise(state, exerciseId, selfScore, hintsUsed, answerText) {
+  function submitExercise(state, exerciseId, selfScore, hintsUsed, answerText, confidence) {
     const ex = getExercise(exerciseId);
     if (!ex) throw new Error("Unknown exercise: " + exerciseId);
     const score = Math.max(0, Math.min(100, selfScore));
@@ -267,7 +273,7 @@ const MTC = (() => {
     const coreDone = quest.items.filter((i) => i.core).every((i) => quest.completed.includes(i.exerciseId));
     if (coreDone) state.graceShields = 1;
 
-    const result = applyAttempt(state, ex.frameworks, {
+    const entry = {
       date: todayStr(),
       exerciseId,
       type: ex.type,
@@ -275,7 +281,9 @@ const MTC = (() => {
       xp: estimateXp(ex.xpBase, score, hintsUsed),
       hintsUsed,
       answer: trimAnswer(answerText),
-    });
+    };
+    if (typeof confidence === "number") entry.confidence = Math.max(0, Math.min(100, confidence));
+    const result = applyAttempt(state, ex.frameworks, entry);
     result.questComplete = quest.completed.length >= quest.items.length;
     return result;
   }
@@ -461,6 +469,68 @@ const MTC = (() => {
     });
   }
 
+  function skillTracks(state) {
+    return MTC_SKILL_TRACKS.map((t) => {
+      const xp = state.trackXp[t.id] || 0;
+      return { id: t.id, name: t.name, xp, level: 1 + Math.floor(xp / 120), pct: Math.round(((xp % 120) / 120) * 100) };
+    });
+  }
+
+  // How far pre-reveal confidence sits from the rubric score, on average —
+  // the everyday-exercise counterpart of the calibration trainer.
+  function exerciseConfidenceGap(state) {
+    const entries = state.history.filter((h) => typeof h.confidence === "number");
+    if (!entries.length) return null;
+    const gap = entries.reduce((t, h) => t + Math.abs(h.confidence - h.score), 0) / entries.length;
+    return { gap: Math.round(gap), n: entries.length };
+  }
+
+  function lastSimilarAnswer(state, exerciseId) {
+    const ex = getExercise(exerciseId);
+    if (!ex) return null;
+    for (let i = state.history.length - 1; i >= 0; i--) {
+      const h = state.history[i];
+      if (h.exerciseId === exerciseId || !h.answer) continue;
+      const other = getExercise(h.exerciseId);
+      if (other && other.frameworks.some((f) => ex.frameworks.includes(f))) {
+        return { record: h, title: other.title };
+      }
+    }
+    return null;
+  }
+
+  /* ---------- Workbench: apply a tool to your own problem ---------- */
+
+  function submitWorkbench(state, toolId, text) {
+    const tool = MTC_TOOLBOX.find((t) => t.id === toolId);
+    if (!tool) throw new Error("Unknown tool: " + toolId);
+    return applyAttempt(state, [], {
+      date: todayStr(),
+      exerciseId: "tool:" + toolId,
+      type: "workbench",
+      score: 100,
+      xp: 10,
+      hintsUsed: 0,
+      answer: trimAnswer(text),
+    });
+  }
+
+  // Weekly confidence-vs-accuracy gap from binary calibration answers.
+  function calibrationTrend(state) {
+    const byWeek = {};
+    for (const a of state.calibration.answers) {
+      if (a.kind !== "binary") continue;
+      const wk = isoWeekKey(new Date(a.date + "T00:00:00Z"));
+      (byWeek[wk] = byWeek[wk] || []).push(a);
+    }
+    return Object.keys(byWeek).sort().slice(-8).map((wk) => {
+      const arr = byWeek[wk];
+      const acc = (arr.filter((a) => a.correct).length / arr.length) * 100;
+      const conf = arr.reduce((t, a) => t + a.confidence, 0) / arr.length;
+      return { week: wk, gap: Math.round(Math.abs(acc - conf)), n: arr.length };
+    });
+  }
+
   /* ---------- Weekly report ---------- */
 
   function weeklyReport(state) {
@@ -499,6 +569,11 @@ const MTC = (() => {
     lastRecordFor,
     exportStateJSON,
     importState,
+    skillTracks,
+    submitWorkbench,
+    calibrationTrend,
+    exerciseConfidenceGap,
+    lastSimilarAnswer,
     pickCalibrationQuestions,
     gradeCalibration,
     calibrationStats,

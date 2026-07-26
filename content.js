@@ -1295,7 +1295,9 @@ MTC_QUEST_TYPES.push("fluency");
 
 MTC_ACHIEVEMENTS.push(
   { id: "wordsmith", name: "Wordsmith", desc: "Complete 5 fluency exercises.", xp: 50,
-    rule: (s) => (s.typeCounts.fluency || 0) >= 5 }
+    rule: (s) => (s.typeCounts.fluency || 0) >= 5 },
+  { id: "field-worker", name: "Field Worker", desc: "Apply a thinking tool to 5 of your own real problems in the Workbench.", xp: 60,
+    rule: (s) => (s.typeCounts.workbench || 0) >= 5 }
 );
 
 MTC_EXERCISES.push(
@@ -1374,3 +1376,20 @@ const MTC_SKILL_TRACKS = [
   { id: "metacognition", name: "Metacognition", frameworks: ["meta-thinking", "cognitive-bias-detection", "critical-thinking", "survivorship-bias", "ethical-reasoning", "circle-of-competence"] },
   { id: "creative", name: "Creative", frameworks: ["divergent-thinking", "convergent-thinking", "lateral-thinking", "design-thinking", "first-principles-thinking"] },
 ];
+
+/* ---------- Workbench templates: apply a tool to your own problem ---------- */
+
+const MTC_TOOL_TEMPLATES = {
+  "ooda": ["OBSERVE — the raw facts, without interpretation:", "ORIENT — what do these facts mean, given my situation and biases?", "DECIDE — the option I'm choosing, and why now:", "ACT — first concrete step, and when I'll loop back to observe again:"],
+  "five-whys": ["The problem:", "Why? (1)", "Why? (2)", "Why? (3)", "Why? (4)", "Why? (5) — root cause:", "The fix my root cause implies:"],
+  "premortem": ["The plan, in one sentence:", "It's 12 months later and it failed. Failure story 1:", "Failure story 2:", "Failure story 3:", "The check or change each story implies, starting now:"],
+  "mece": ["What I'm breaking down:", "My categories (no overlaps, nothing missing):", "Check — do any two categories overlap?", "Check — what real case fits none of them?"],
+  "cynefin": ["The situation:", "Is cause-and-effect obvious (Clear), analyzable (Complicated), only visible afterwards (Complex), or absent (Chaotic)?", "What response does that domain call for?", "What would tell me I've misclassified it?"],
+  "decision-matrix": ["The decision:", "My options:", "My criteria, with rough weights:", "Scores per option:", "The winner — and does it FEEL wrong? If so, which criterion is missing?"],
+  "inversion": ["My goal:", "How would I guarantee failure?", "Which of those failure-guarantees am I already doing, even a little?", "What I'll stop or change:"],
+  "base-rates": ["What I'm estimating:", "The base rate — how often does this happen in general?", "What's genuinely specific about my case?", "My estimate, anchored on the base rate and adjusted:"],
+  "swot": ["The subject:", "Strengths (internal):", "Weaknesses (internal):", "Opportunities (external):", "Threats (external):", "The single most important cell, and what I'll do about it:"],
+  "expected-value": ["The bet or choice:", "Possible outcomes, with rough probabilities:", "The value of each outcome:", "The expected-value math:", "Could any outcome ruin me regardless of the average?"],
+  "feynman": ["The concept:", "My plain explanation (as if to a 12-year-old):", "Where I got stuck or reached for jargon:", "What I need to relearn to fill that gap:"],
+  "occams-razor": ["The observation:", "The competing explanations:", "The assumptions each one needs:", "The simplest adequate explanation — and what evidence would overturn it:"],
+};

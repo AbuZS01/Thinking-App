@@ -35,6 +35,27 @@ const BOSS_FINAL_STAGE = {
 };
 const BOSS_MONITOR_RUBRIC = "I committed to ONE decision, wrote the two most likely ways it fails, and named early signs that would tell me I chose wrong";
 
+let wbUI = null; // {toolId, draft}
+
+// Passive nudge: vague outcome-phrases that hide the mechanism.
+const VAGUE_RE = /(turned out bad|went wrong|didn'?t work( out)?|it was bad|wasn'?t great|people were (unhappy|upset|angry)|bad fit|too much pressure|not good enough|poor performance|things went south|fell apart)/i;
+
+function vagueTipHTML() {
+  return `<p class="subtle nudge" data-vague-tip style="display:none"></p>`;
+}
+
+function checkVague(text) {
+  const tip = document.querySelector("[data-vague-tip]");
+  if (!tip) return;
+  const m = text.match(VAGUE_RE);
+  if (m) {
+    tip.textContent = `"${m[0]}" is an outcome, not a mechanism — can you say who does what differently?`;
+    tip.style.display = "";
+  } else {
+    tip.style.display = "none";
+  }
+}
+
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
@@ -61,7 +82,7 @@ function levelInfo() {
 
 function navBtn(key, label) {
   const r = route();
-  const active = r === key || r.startsWith(key + "/") || (key === "quest" && r.startsWith("exercise/"));
+  const active = r === key || r.startsWith(key + "/") || (key === "quest" && r.startsWith("exercise/")) || (key === "toolbox" && r.startsWith("workbench/"));
   return `<a href="#/${key}" data-nav="${key}" ${active ? 'class="active" aria-current="page"' : ""}>${label}</a>`;
 }
 
@@ -192,7 +213,7 @@ const TYPE_LABELS = {
   warmup: "Warm-up", challenge: "Challenge", case: "Real-World Case", reflection: "Reflection",
   creativity: "Creativity", logic_puzzle: "Logic Puzzle", decision: "Decision Scenario",
   bias: "Bias Detection", observation: "Observation", fluency: "Fluency", boss: "Boss Battle",
-  calibration: "Calibration", review: "Review",
+  calibration: "Calibration", review: "Review", workbench: "Workbench",
 };
 
 function questHTML() {
@@ -272,7 +293,10 @@ function exerciseHTML(id) {
         <h2>Self-Assessment</h2>
         <p class="subtle">Tick only what you truly did &mdash; if unsure, leave it unchecked. Strict grading is the training.</p>
         ${ex.rubric.map((r, i) => `<label class="rubric-item"><input type="checkbox" data-rubric-idx="${i}" ${exUI.checked.has(i) ? "checked" : ""}/> <span>${esc(r)}</span></label>`).join("")}
-        <div class="model-answer"><div class="lbl">Model Answer</div>${esc(ex.modelAnswer)}</div>
+        <div class="compare">
+          <div class="model-answer"><div class="lbl">Your Answer</div><div class="journal-answer" style="border:none;padding:0;margin:0">${esc(exUI.draft) || '<span class="subtle">(nothing written)</span>'}</div></div>
+          <div class="model-answer"><div class="lbl">Model Answer</div>${esc(ex.modelAnswer)}</div>
+        </div>
         <div class="model-answer"><div class="lbl">Expert Note</div>${esc(ex.expertNote)}</div>
         <p style="margin-top:12px">Self-assessed score: <b>${scorePreview}%</b> (${checkedCount}/${total} criteria) &middot; est. XP: <b>${MTC.estimateXp(ex.xpBase, scorePreview, exUI.hintsRevealed)}</b></p>
         <button class="btn" data-submit-exercise>Submit</button>
@@ -286,6 +310,7 @@ function exerciseHTML(id) {
     </div>`;
   return header + `<div class="panel">
     <textarea id="ex-draft" placeholder="Write your answer &mdash; saved to your journal on submit.">${esc(exUI.draft)}</textarea>
+    ${vagueTipHTML()}
     ${CHANGE_MIND_TYPES.includes(ex.type) ? `<p class="subtle" style="margin-top:6px">End with: what evidence would change your mind?</p>` : ""}
     ${tools}
     <div class="field">${hintBtn}</div>
@@ -347,7 +372,10 @@ function bossHTML() {
       <h2>Self-Assessment</h2>
       <p class="subtle">Tick only what you truly did &mdash; if unsure, leave it unchecked.</p>
       ${rubric.map((r, i) => `<label class="rubric-item"><input type="checkbox" data-boss-rubric-idx="${i}" ${bossUI.checked.has(i) ? "checked" : ""}/> <span>${esc(r)}</span></label>`).join("")}
-      <div class="model-answer"><div class="lbl">Expert Framing (no perfect answer)</div>${esc(battle.noPerfectAnswerNote)}</div>
+      <div class="compare">
+        <div class="model-answer"><div class="lbl">Your Answer</div><div class="journal-answer" style="border:none;padding:0;margin:0">${esc(bossUI.draft) || '<span class="subtle">(nothing written)</span>'}</div></div>
+        <div class="model-answer"><div class="lbl">Expert Framing (no perfect answer)</div>${esc(battle.noPerfectAnswerNote)}</div>
+      </div>
       <p style="margin-top:12px">Self-assessed score: <b>${scorePreview}%</b> &middot; est. XP: <b>${MTC.estimateXp(battle.xpBase, scorePreview, 0)}</b></p>
       <button class="btn" data-submit-boss="${battle.id}">Submit</button>
     </div>`;
@@ -361,6 +389,7 @@ function bossHTML() {
   </div>
   <div class="panel">
     <textarea id="boss-draft" placeholder="Work through your reasoning &mdash; saved to your journal on submit.">${esc(bossUI.draft)}</textarea>
+    ${vagueTipHTML()}
     <div class="field draft-tools">
       <button class="btn ghost" data-outline="boss">Insert outline</button>
       ${SpeechRec ? `<button class="btn ghost" data-mic="boss-draft">&#127908; Dictate</button>` : ""}
@@ -374,7 +403,7 @@ function bossHTML() {
 function toolboxResultsHTML() {
   const q = toolboxFilter.toLowerCase();
   const items = MTC_TOOLBOX.filter((t) => !q || t.name.toLowerCase().includes(q) || t.summary.toLowerCase().includes(q));
-  return items.map((t) => `<div class="panel"><h2>${esc(t.name)}</h2><p>${esc(t.summary)}</p><p class="subtle"><b>When:</b> ${esc(t.when)}</p></div>`).join("") || `<p class="subtle">No tools match.</p>`;
+  return items.map((t) => `<div class="panel"><h2>${esc(t.name)}</h2><p>${esc(t.summary)}</p><p class="subtle"><b>When:</b> ${esc(t.when)}</p><a class="cta" href="#/workbench/${t.id}">Apply to my problem &rarr;</a></div>`).join("") || `<p class="subtle">No tools match.</p>`;
 }
 
 function toolboxHTML() {
@@ -447,6 +476,22 @@ function calibrationLandingHTML() {
        ${st.buckets.filter((b) => b.n > 0).map((b) => `
          <div class="weak-row"><span class="name">Said ${b.label}</span><div class="weak-meter"><div class="fill" style="width:${b.actual}%"></div></div><span class="subtle">right ${b.actual}% (${b.n})</span></div>`).join("")}`;
   const exGap = MTC.exerciseConfidenceGap(STATE);
+  const trend = MTC.calibrationTrend(STATE);
+  let trendHTML = "";
+  if (trend.length >= 2) {
+    const w = 300, hgt = 70, maxGap = Math.max(20, ...trend.map((t) => t.gap));
+    const pts = trend.map((t, i) => `${(i / (trend.length - 1)) * w},${hgt - (t.gap / maxGap) * hgt}`).join(" ");
+    trendHTML = `<div class="field">
+      <p class="subtle">Confidence gap by week (lower is better calibrated):</p>
+      <svg viewBox="0 0 ${w} ${hgt + 14}" class="trend" preserveAspectRatio="none" role="img" aria-label="Calibration gap trend">
+        <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" />
+        <line x1="0" y1="${hgt}" x2="${w}" y2="${hgt}" stroke="var(--hairline)" stroke-width="1" />
+      </svg>
+      <p class="subtle">${esc(trend[0].week)} &rarr; ${esc(trend[trend.length - 1].week)} &middot; latest gap: ${trend[trend.length - 1].gap} points</p>
+    </div>`;
+  } else if (trend.length === 1) {
+    trendHTML = `<p class="subtle">Your week-by-week trend appears after a second week of sessions.</p>`;
+  }
   return `<div class="panel">
     <h1>Calibration</h1>
     <p class="subtle">Auto-graded &mdash; no honor system. Honest confidence earns the most XP; overconfidence is penalized.</p>
@@ -455,6 +500,7 @@ function calibrationLandingHTML() {
   <div class="panel">
     <h2>Your calibration</h2>
     ${statsHTML}
+    ${trendHTML}
   </div>
   <div class="panel">
     <button class="btn" data-cal-start>Start a session &middot; 7 questions</button>
@@ -566,6 +612,43 @@ function reportHTML() {
   <p><b>Field assignment:</b> apply ${esc(r.focus.name)} to one real decision this week, and write what happened in that exercise's answer box when it next appears.</p></div>` : ""}`;
 }
 
+/* ---------- Workbench: apply a tool to your own problem ---------- */
+
+function workbenchTemplate(tool) {
+  const fields = MTC_TOOL_TEMPLATES[tool.id] || [
+    "My problem or decision:",
+    "Applying the tool (" + tool.summary + "):",
+    "What the tool reveals:",
+    "My next concrete step:",
+  ];
+  return fields.map((f) => f + "\n\n").join("");
+}
+
+function workbenchHTML(toolId) {
+  const tool = MTC_TOOLBOX.find((t) => t.id === toolId);
+  if (!tool) return `<div class="panel">Tool not found. <a class="btn" href="#/toolbox">Toolbox</a></div>`;
+  if (!wbUI || wbUI.toolId !== toolId) {
+    wbUI = { toolId, draft: workbenchTemplate(tool) };
+  }
+  const ready = wbUI.draft.replace(/[^]*?:/g, "").trim().length >= 40;
+  return `<div class="panel">
+    <a class="crumb" href="#/toolbox">&larr; Toolbox</a>
+    <h1>${esc(tool.name)} &mdash; on your problem</h1>
+    <p class="subtle">${esc(tool.summary)}</p>
+    <p class="subtle"><b>When:</b> ${esc(tool.when)}</p>
+  </div>
+  <div class="panel">
+    <textarea id="wb-draft" style="min-height:260px">${esc(wbUI.draft)}</textarea>
+    <div class="field draft-tools">
+      ${SpeechRec ? `<button class="btn ghost" data-mic="wb-draft">&#127908; Dictate</button>` : ""}
+    </div>
+    <div class="field">
+      <button class="btn" data-submit-workbench="${tool.id}" ${ready ? "" : "disabled"}>Save to journal (+10 XP)</button>
+      <p class="subtle" data-gate-note ${ready ? 'style="display:none"' : ""}>Fill in the sections &mdash; it unlocks saving.</p>
+    </div>
+  </div>`;
+}
+
 /* ---------- Journal ---------- */
 
 function journalResultsHTML() {
@@ -574,10 +657,7 @@ function journalResultsHTML() {
     .filter((h) => h.type !== "review" && h.type !== "calibration")
     .filter((h) => {
       if (!q) return true;
-      const isBoss = h.type === "boss";
-      const def = isBoss ? MTC.getBossBattleDef(h.exerciseId) : MTC.getExercise(h.exerciseId);
-      const title = def ? (isBoss ? def.name : def.title) : h.exerciseId;
-      return (title + " " + (h.answer || "") + " " + h.type).toLowerCase().includes(q);
+      return (journalEntryTitle(h) + " " + (h.answer || "") + " " + h.type).toLowerCase().includes(q);
     })
     .slice(-100)
     .reverse();
@@ -585,22 +665,45 @@ function journalResultsHTML() {
     return `<div class="panel"><p class="subtle">${journalFilter ? "No entries match." : "Complete an exercise and your answer will appear here."}</p></div>`;
   }
   return entries.map((h) => {
-    const isBoss = h.type === "boss";
-    const def = isBoss ? MTC.getBossBattleDef(h.exerciseId) : MTC.getExercise(h.exerciseId);
-    const title = def ? (isBoss ? def.name : def.title) : h.exerciseId;
+    const title = journalEntryTitle(h);
     return `<div class="panel">
       <span class="pill">${TYPE_LABELS[h.type] || esc(h.type)}</span><span class="pill">${esc(h.date)}</span>
       <h2>${esc(title)}</h2>
-      <p class="subtle">Self-assessed ${h.score}% &middot; +${h.xp} XP${h.hintsUsed ? ` &middot; ${h.hintsUsed} hint${h.hintsUsed === 1 ? "" : "s"} used` : ""}</p>
+      <p class="subtle">${h.type === "workbench" ? `+${h.xp} XP` : `Self-assessed ${h.score}% &middot; +${h.xp} XP${h.hintsUsed ? ` &middot; ${h.hintsUsed} hint${h.hintsUsed === 1 ? "" : "s"} used` : ""}`}</p>
       ${h.answer ? `<div class="journal-answer">${esc(h.answer)}</div>` : `<p class="subtle">(no written answer was saved with this entry)</p>`}
     </div>`;
   }).join("");
+}
+
+function journalEntryTitle(h) {
+  if (h.type === "boss") {
+    const b = MTC.getBossBattleDef(h.exerciseId);
+    return b ? b.name : h.exerciseId;
+  }
+  if (h.type === "workbench") {
+    const t = MTC_TOOLBOX.find((x) => "tool:" + x.id === h.exerciseId);
+    return t ? t.name + " (your problem)" : h.exerciseId;
+  }
+  const ex = MTC.getExercise(h.exerciseId);
+  return ex ? ex.title : h.exerciseId;
+}
+
+function journalMarkdown() {
+  const lines = ["# Master Thinking Coach — Journal", ""];
+  for (const h of STATE.history) {
+    if (!h.answer) continue;
+    lines.push(`## ${h.date} — ${journalEntryTitle(h)} (${TYPE_LABELS[h.type] || h.type})`);
+    if (h.type !== "workbench") lines.push(`Self-assessed ${h.score}% · +${h.xp} XP`);
+    lines.push("", h.answer, "");
+  }
+  return lines.join("\n");
 }
 
 function journalHTML() {
   return `<div class="panel">
     <h1>Journal</h1>
     <input type="text" id="journal-search" placeholder="Search your answers..." value="${esc(journalFilter)}" />
+    <div class="field"><button class="btn ghost" data-export-journal>Export journal (.md)</button></div>
   </div>
   <div id="journal-results">${journalResultsHTML()}</div>`;
 }
@@ -639,6 +742,7 @@ function render() {
   else if (r === "report") body = reportHTML();
   else if (r === "journal") body = journalHTML();
   else if (r === "toolbox") body = toolboxHTML();
+  else if (r.startsWith("workbench/")) body = workbenchHTML(r.split("/")[1]);
   else if (r === "frameworks") body = frameworksListHTML();
   else if (r.startsWith("frameworks/")) body = frameworkDetailHTML(r.split("/")[1]);
   else if (r === "achievements") body = achievementsHTML();
@@ -813,6 +917,25 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  const wbSubmit = e.target.closest("[data-submit-workbench]");
+  if (wbSubmit) {
+    const result = MTC.submitWorkbench(STATE, wbSubmit.dataset.submitWorkbench, wbUI.draft);
+    pendingResult = result;
+    wbUI = null;
+    render();
+    return;
+  }
+
+  if (e.target.closest("[data-export-journal]")) {
+    const blob = new Blob([journalMarkdown()], { type: "text/markdown" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `thinking-coach-journal-${MTC.todayStr()}.md`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    return;
+  }
+
   if (e.target.closest("[data-export-progress]")) {
     const blob = new Blob([MTC.exportStateJSON()], { type: "application/json" });
     const a = document.createElement("a");
@@ -886,11 +1009,22 @@ document.addEventListener("input", (e) => {
   if (e.target.id === "ex-draft") {
     if (exUI) exUI.draft = e.target.value;
     toggleGate("[data-show-assessment]", e.target.value);
+    checkVague(e.target.value);
     return;
   }
   if (e.target.id === "boss-draft") {
     if (bossUI) bossUI.draft = e.target.value;
     toggleGate("[data-boss-show-resolution]", e.target.value);
+    checkVague(e.target.value);
+    return;
+  }
+  if (e.target.id === "wb-draft") {
+    if (wbUI) wbUI.draft = e.target.value;
+    const btn = document.querySelector("[data-submit-workbench]");
+    const ready = e.target.value.replace(/[^]*?:/g, "").trim().length >= 40;
+    if (btn) btn.disabled = !ready;
+    const note = document.querySelector("[data-gate-note]");
+    if (note) note.style.display = ready ? "none" : "";
     return;
   }
   if (e.target.id === "ex-confidence") {

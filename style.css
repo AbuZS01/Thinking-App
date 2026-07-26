@@ -263,6 +263,19 @@ input[type=range] { width: 100%; max-width: 420px; accent-color: var(--accent); 
 
 .rev-grades { display: flex; gap: 10px; flex-wrap: wrap; }
 
+.draft-tools { display: flex; gap: 18px; flex-wrap: wrap; }
+
+.nudge { color: var(--accent); margin-top: 6px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+.compare .journal-answer { background: transparent; }
+
+.trend { width: 100%; max-width: 460px; height: 84px; display: block; margin: 6px 0; }
+
+details.past-answer summary { cursor: pointer; }
+details.past-answer summary:hover { color: var(--ink); }
+
 @media (max-width: 640px) {
   #app { padding: 0 12px 56px; }
   .panel { padding: 16px; }
