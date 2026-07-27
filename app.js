@@ -35,6 +35,30 @@ const BOSS_FINAL_STAGE = {
 };
 const BOSS_MONITOR_RUBRIC = "I committed to ONE decision, wrote the two most likely ways it fails, and named early signs that would tell me I chose wrong";
 
+const PRACTICE_PATHS = [
+  { id: "decide", title: "Decide Under Uncertainty", source: "Inspired by decision-journal practice and Thinking in Bets", lessons: [
+    ["Separate luck from process", "Name a recent outcome. Which part came from your choices, and which part was luck?"],
+    ["Set a confidence", "Make one forecast and give it a probability. What evidence would move that number?"],
+    ["Find the base rate", "Before judging your situation, find a comparable class of situations. What usually happens?"],
+    ["Run a pre-mortem", "Assume your plan failed six months from now. List three plausible causes."],
+    ["Review without hindsight", "Re-read an old decision. Was the process sound with what you knew then?"],
+  ] },
+  { id: "clarify", title: "Think Clearly", source: "Inspired by scout-minded and critical-thinking practice", lessons: [
+    ["Claim or evidence?", "Take a belief you hold. Write the claim, then list only the evidence you can actually observe."],
+    ["Steelman the other side", "State the strongest reasonable case against your current view."],
+    ["Expose assumptions", "What must be true for your conclusion to hold? List three assumptions."],
+    ["Search for disconfirmation", "What result would make you change your mind? Where could you look for it?"],
+    ["Explain the mechanism", "Replace an outcome statement with a causal explanation: who does what differently, and why?"],
+  ] },
+  { id: "create", title: "Creative Problem-Solving", source: "Inspired by lateral thinking and idea-generation practice", lessons: [
+    ["Idea quota", "Choose a challenge and generate ten answers before evaluating any of them."],
+    ["Forced connection", "Combine your challenge with a random object or industry. What new approach appears?"],
+    ["Reverse an assumption", "Write an assumption about the problem. Reverse it and explore the consequences."],
+    ["Constraint remix", "How would you solve it with one tenth the budget, time, or resources?"],
+    ["Incubate and select", "Leave an idea overnight, then choose one tiny experiment instead of more brainstorming."],
+  ] },
+];
+
 let wbUI = null; // {toolId, draft}
 
 // Passive nudge: vague outcome-phrases that hide the mechanism.
@@ -153,6 +177,7 @@ function dashboardHTML() {
   const battle = MTC.getBossBattleDef(battleState.battleId);
   const weak = MTC.weaknessProfile(STATE).filter((w) => w.attempts > 0).slice(0, 5);
   const dueDecisions = MTC.dueDecisions(STATE);
+  const dueIdeas = MTC.dueCreativeSessions(STATE);
   const insights = MTC.weeklyInsights(STATE);
   const session = STATE.profile.sessionLength;
   const sessionLabel = session === "quick" ? "5-minute reset" : session === "deep" ? "Deep practice" : "15-minute session";
@@ -204,7 +229,17 @@ function dashboardHTML() {
     </a>
   </div>
 
+  <div class="panel">
+    <h2>What do you need right now?</h2>
+    <div class="grid tight">
+      <a class="card" href="#/decisions"><span class="tag">Real choice</span><h2>Make a decision</h2><p class="subtle">Clarify evidence, uncertainty, and what would change your mind.</p><span class="cta">Open decision log &rarr;</span></a>
+      <a class="card" href="#/creative"><span class="tag">Unblock</span><h2>Unblock an idea</h2><p class="subtle">Generate, remix, select, then let one idea incubate.</p><span class="cta">Open creativity studio &rarr;</span></a>
+      <a class="card" href="#/quest/quick"><span class="tag">5 minutes</span><h2>Train briefly</h2><p class="subtle">One focused prompt to keep your thinking habit alive.</p><span class="cta">Start reset &rarr;</span></a>
+    </div>
+  </div>
+
   ${dueDecisions.length ? `<div class="panel"><span class="tag">Review due</span><h2>${dueDecisions.length} decision${dueDecisions.length === 1 ? "" : "s"} ready to learn from</h2><p class="subtle">Revisit your original reasoning before hindsight takes over.</p><a class="btn" href="#/decisions">Review decisions</a></div>` : ""}
+  ${dueIdeas.length ? `<div class="panel"><span class="tag">Incubation complete</span><h2>${dueIdeas.length} idea${dueIdeas.length === 1 ? "" : "s"} ready to revisit</h2><p class="subtle">Fresh perspective is part of the creative process.</p><a class="btn" href="#/creative">Revisit ideas</a></div>` : ""}
 
   <div class="panel">
     <h2>This week, about your thinking</h2>
@@ -226,6 +261,8 @@ function dashboardHTML() {
   <div class="grid tight">
     <a class="panel card" href="#/journal"><h2>Journal</h2><p class="subtle">${STATE.history.length} answer${STATE.history.length === 1 ? "" : "s"}</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/decisions"><h2>Decision Log</h2><p class="subtle">Make a decision, then learn from it</p><span class="cta">Open &rarr;</span></a>
+    <a class="panel card" href="#/creative"><h2>Creativity Studio</h2><p class="subtle">Generate and incubate better ideas</p><span class="cta">Open &rarr;</span></a>
+    <a class="panel card" href="#/paths"><h2>Practice Paths</h2><p class="subtle">Short, structured thinking skills</p><span class="cta">Choose a path &rarr;</span></a>
     <a class="panel card" href="#/toolbox"><h2>Toolbox</h2><p class="subtle">${MTC_TOOLBOX.length} thinking tools</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/frameworks"><h2>Frameworks</h2><p class="subtle">${MTC_FRAMEWORKS.length} thinking styles</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/report"><h2>Weekly Report</h2><p class="subtle">This week vs last</p><span class="cta">Open &rarr;</span></a>
@@ -678,6 +715,72 @@ function workbenchHTML(toolId) {
   </div>`;
 }
 
+/* ---------- Creativity Studio ---------- */
+
+const CREATIVE_LENSES = [
+  ["combine", "Forced connection", "Combine the problem with an unrelated object, industry, or habit."],
+  ["reverse", "Reverse an assumption", "What if an assumed rule were reversed or removed?"],
+  ["constraint", "Constraint remix", "Solve it with one tenth the time, money, or resources."],
+  ["absurd", "Make it absurd, then useful", "Push the idea too far, then rescue one useful piece."],
+  ["borrow", "Borrow a model", "How would a very different field solve this?"],
+];
+
+function creativeHTML() {
+  const due = MTC.dueCreativeSessions(STATE);
+  const sessions = [...STATE.creativeSessions].reverse();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return `<div class="panel">
+    <a class="crumb" href="#/dashboard">&larr; Dashboard</a>
+    <h1>Creativity Studio</h1>
+    <p class="subtle">Generate first. Judge later. Save one small experiment, then come back with fresh eyes.</p>
+  </div>
+  ${due.length ? `<div class="panel"><h2>Revisit with fresh eyes</h2>${due.map((session) => creativeReviewHTML(session)).join("")}</div>` : ""}
+  <div class="panel">
+    <h2>Start with one challenge</h2>
+    <form data-creative-form>
+      <label class="subtle" for="creative-challenge">What are you trying to make, solve, or improve?</label>
+      <textarea id="creative-challenge" name="challenge" required placeholder="e.g. Help new users understand the app in their first minute."></textarea>
+      <label class="subtle" for="creative-lens">Choose a lens</label>
+      <select id="creative-lens" name="lens">${CREATIVE_LENSES.map(([id, label, description]) => `<option value="${id}">${esc(label)} — ${esc(description)}</option>`).join("")}</select>
+      <label class="subtle" for="creative-ideas">Generate at least 5 rough ideas. No judging yet.</label>
+      <textarea id="creative-ideas" name="ideas" required placeholder="1. ...&#10;2. ...&#10;3. ...&#10;4. ...&#10;5. ..."></textarea>
+      <label class="subtle" for="creative-selected">Which idea deserves a closer look?</label>
+      <textarea id="creative-selected" name="selectedIdea" placeholder="Choose one promising direction."></textarea>
+      <label class="subtle" for="creative-experiment">Smallest next experiment</label>
+      <textarea id="creative-experiment" name="experiment" placeholder="What can you test in under an hour?"></textarea>
+      <label class="subtle" for="creative-incubate">Revisit on</label>
+      <input id="creative-incubate" name="incubateUntil" type="date" min="${MTC.todayStr()}" value="${MTC.todayStr(tomorrow)}" required />
+      <div class="field"><button class="btn" type="submit">Save idea session (+10 XP)</button></div>
+    </form>
+  </div>
+  ${sessions.length ? `<div class="panel"><h2>Idea shelf</h2>${sessions.map((session) => `<div class="weak-row"><span class="name"><b>${esc(session.challenge)}</b><br/><span class="subtle">${esc(session.selectedIdea || "No idea selected yet")}</span></span><span class="subtle">${session.revisitedAt ? "Revisited" : `Revisit ${esc(session.incubateUntil)}`}</span></div>`).join("")}</div>` : ""}`;
+}
+
+function creativeReviewHTML(session) {
+  return `<div class="model-answer"><div class="lbl">${esc(session.challenge)}</div><p><b>Selected idea:</b> ${esc(session.selectedIdea || "None")}</p><p><b>Experiment:</b> ${esc(session.experiment || "None")}</p><form data-creative-review="${esc(session.id)}"><textarea name="reflection" placeholder="What looks different now? What will you try next?"></textarea><div class="field"><button class="btn" type="submit">Save revisit</button></div></form></div>`;
+}
+
+/* ---------- Practice paths ---------- */
+
+function pathsHTML() {
+  return `<div class="panel"><a class="crumb" href="#/dashboard">&larr; Dashboard</a><h1>Practice Paths</h1><p class="subtle">Short, original exercises built around durable thinking methods. One lesson is enough for today.</p></div>
+  <div class="grid">${PRACTICE_PATHS.map((path) => {
+    const done = path.lessons.filter((_, index) => STATE.pathProgress[`${path.id}:${index}`]).length;
+    return `<a class="card" href="#/paths/${path.id}"><span class="tag">${done}/${path.lessons.length} complete</span><h2>${esc(path.title)}</h2><p class="subtle">${esc(path.source)}</p><span class="cta">Open path &rarr;</span></a>`;
+  }).join("")}</div>`;
+}
+
+function pathHTML(id) {
+  const path = PRACTICE_PATHS.find((item) => item.id === id);
+  if (!path) return `<div class="panel">Path not found. <a class="btn" href="#/paths">Practice Paths</a></div>`;
+  return `<div class="panel"><a class="crumb" href="#/paths">&larr; Practice Paths</a><h1>${esc(path.title)}</h1><p class="subtle">${esc(path.source)}</p></div>
+  <div class="grid">${path.lessons.map(([title, prompt], index) => {
+    const done = STATE.pathProgress[`${path.id}:${index}`];
+    return `<div class="panel"><span class="tag">Lesson ${index + 1}${done ? " · Complete" : ""}</span><h2>${esc(title)}</h2><p>${esc(prompt)}</p>${done ? `<p class="subtle">Completed—come back later and apply it to a new situation.</p>` : `<button class="btn" data-path-complete="${path.id}" data-path-lesson="${index}">Mark practiced (+5 XP)</button>`}</div>`;
+  }).join("")}</div>`;
+}
+
 /* ---------- Decision records ---------- */
 
 function decisionsHTML() {
@@ -700,8 +803,18 @@ function decisionsHTML() {
       <textarea id="decision-options" name="options" placeholder="List the real alternatives, including doing nothing."></textarea>
       <label class="subtle" for="decision-criteria">Decision criteria and evidence</label>
       <textarea id="decision-criteria" name="criteria" placeholder="What will you optimize for? What evidence supports each option?"></textarea>
+      <label class="subtle" for="decision-evidence-for">Evidence supporting your leading option</label>
+      <textarea id="decision-evidence-for" name="evidenceFor" placeholder="What concrete facts point this way?"></textarea>
+      <label class="subtle" for="decision-evidence-against">Evidence against it / strongest alternative</label>
+      <textarea id="decision-evidence-against" name="evidenceAgainst" placeholder="Steelman the best case against your current preference."></textarea>
+      <label class="subtle" for="decision-base-rate">Base rate or comparable situations</label>
+      <textarea id="decision-base-rate" name="baseRate" placeholder="What usually happens in similar situations?"></textarea>
       <label class="subtle" for="decision-choice">Your decision</label>
       <textarea id="decision-choice" name="decision" placeholder="Commit to one option and explain why."></textarea>
+      <label class="subtle" for="decision-confidence">How confident are you?</label>
+      <input id="decision-confidence" name="confidence" type="range" min="0" max="100" value="50" />
+      <label class="subtle" for="decision-surprise">What outcome would surprise you?</label>
+      <textarea id="decision-surprise" name="surprise" placeholder="Name a result that would tell you your model was wrong."></textarea>
       <label class="subtle" for="decision-premortem">Pre-mortem: if this goes badly, why?</label>
       <textarea id="decision-premortem" name="preMortem" placeholder="Name likely failure modes."></textarea>
       <label class="subtle" for="decision-indicators">Leading indicators to watch</label>
@@ -727,7 +840,12 @@ function decisionDetailHTML(id) {
     ${section("Context and objective", decision.context)}
     ${section("Options", decision.options)}
     ${section("Criteria and evidence", decision.criteria)}
+    ${section("Evidence supporting it", decision.evidenceFor)}
+    ${section("Evidence against it", decision.evidenceAgainst)}
+    ${section("Base rate", decision.baseRate)}
     ${section("Decision", decision.decision)}
+    ${decision.confidence !== undefined ? `<div class="model-answer"><div class="lbl">Confidence</div>${esc(decision.confidence)}%</div>` : ""}
+    ${section("What would surprise me", decision.surprise)}
     ${section("Pre-mortem", decision.preMortem)}
     ${section("Leading indicators", decision.indicators)}
   </div>
@@ -830,6 +948,9 @@ function render() {
   else if (r === "review") body = reviewHTML();
   else if (r === "report") body = reportHTML();
   else if (r === "journal") body = journalHTML();
+  else if (r === "creative") body = creativeHTML();
+  else if (r === "paths") body = pathsHTML();
+  else if (r.startsWith("paths/")) body = pathHTML(r.split("/")[1]);
   else if (r === "decisions") body = decisionsHTML();
   else if (r.startsWith("decisions/")) body = decisionDetailHTML(r.split("/")[1]);
   else if (r === "toolbox") body = toolboxHTML();
@@ -1162,6 +1283,13 @@ document.addEventListener("submit", (e) => {
     render();
     return;
   }
+
+  const pathBtn = e.target.closest("[data-path-complete]");
+  if (pathBtn) {
+    MTC.completePathLesson(STATE, pathBtn.dataset.pathComplete, pathBtn.dataset.pathLesson);
+    render();
+    return;
+  }
   if (e.target.matches("[data-decision-form]")) {
     e.preventDefault();
     try {
@@ -1179,6 +1307,26 @@ document.addEventListener("submit", (e) => {
       render();
     } catch (err) {
       alert(err.message || "Unable to save this review.");
+    }
+    return;
+  }
+  if (e.target.matches("[data-creative-form]")) {
+    e.preventDefault();
+    try {
+      MTC.saveCreativeSession(STATE, Object.fromEntries(new FormData(e.target)));
+      render();
+    } catch (err) {
+      alert(err.message || "Unable to save this idea session.");
+    }
+    return;
+  }
+  if (e.target.matches("[data-creative-review]")) {
+    e.preventDefault();
+    try {
+      MTC.revisitCreativeSession(STATE, e.target.dataset.creativeReview, new FormData(e.target).get("reflection"));
+      render();
+    } catch (err) {
+      alert(err.message || "Unable to save this revisit.");
     }
   }
 });

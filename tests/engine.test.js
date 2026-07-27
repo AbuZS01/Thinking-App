@@ -75,3 +75,26 @@ test("decision records can be saved and completed", () => {
   assert.equal(MTC.dueDecisions(state).length, 0);
   assert.equal(state.decisions[0].outcome, "The extra week found the issue.");
 });
+
+test("creative sessions can be incubated and revisited", () => {
+  const { MTC } = loadEngine();
+  const state = MTC.loadState();
+  const session = MTC.saveCreativeSession(state, {
+    challenge: "Improve onboarding", lens: "reverse", ideas: "1. Remove every screen.",
+    selectedIdea: "One question at a time.", experiment: "Sketch a one-screen version.", incubateUntil: MTC.todayStr(),
+  });
+
+  assert.equal(MTC.dueCreativeSessions(state).length, 1);
+  MTC.revisitCreativeSession(state, session.id, "The one-screen version is clearer.");
+  assert.equal(MTC.dueCreativeSessions(state).length, 0);
+  assert.equal(state.creativeSessions[0].reflection, "The one-screen version is clearer.");
+});
+
+test("practice lessons award XP only once", () => {
+  const { MTC } = loadEngine();
+  const state = MTC.loadState();
+  assert.equal(MTC.completePathLesson(state, "create", 0), true);
+  assert.equal(state.totalXp, 5);
+  assert.equal(MTC.completePathLesson(state, "create", 0), false);
+  assert.equal(state.totalXp, 5);
+});

@@ -75,6 +75,8 @@ const MTC = (() => {
       bossBattle: null, // {week, battleId, completed, stageNotes: []}
       profile: { focus: "general", sessionLength: "standard" },
       decisions: [], // {id, title, context, options, criteria, decision, preMortem, indicators, reviewDate, createdAt, reviewedAt, outcome}
+      creativeSessions: [], // {id, challenge, lens, ideas, selectedIdea, experiment, incubateUntil, createdAt, revisitedAt, reflection}
+      pathProgress: {}, // "pathId:lessonIndex" -> true
     };
   }
 
@@ -127,6 +129,8 @@ const MTC = (() => {
     state.graceShields = Math.min(1, Math.floor(nonNegativeNumber(value.graceShields, 1)));
     state.reviewCount = Math.floor(nonNegativeNumber(value.reviewCount));
     state.trackXp = numberMap(value.trackXp);
+    state.pathProgress = isRecord(value.pathProgress)
+      ? Object.fromEntries(Object.entries(value.pathProgress).filter(([key, done]) => typeof key === "string" && key.length <= 100 && done === true)) : {};
     if (isRecord(value.profile)) {
       state.profile = {
         focus: typeof value.profile.focus === "string" ? value.profile.focus.slice(0, 60) : "general",
@@ -204,11 +208,26 @@ const MTC = (() => {
           context: typeof decision.context === "string" ? decision.context.slice(0, 4000) : "",
           options: typeof decision.options === "string" ? decision.options.slice(0, 4000) : "",
           criteria: typeof decision.criteria === "string" ? decision.criteria.slice(0, 4000) : "",
+          evidenceFor: typeof decision.evidenceFor === "string" ? decision.evidenceFor.slice(0, 4000) : "",
+          evidenceAgainst: typeof decision.evidenceAgainst === "string" ? decision.evidenceAgainst.slice(0, 4000) : "",
+          baseRate: typeof decision.baseRate === "string" ? decision.baseRate.slice(0, 2000) : "",
+          confidence: boundedNumber(decision.confidence, 0, 100),
+          surprise: typeof decision.surprise === "string" ? decision.surprise.slice(0, 2000) : "",
           decision: typeof decision.decision === "string" ? decision.decision.slice(0, 4000) : "",
           preMortem: typeof decision.preMortem === "string" ? decision.preMortem.slice(0, 4000) : "",
           indicators: typeof decision.indicators === "string" ? decision.indicators.slice(0, 4000) : "",
           reviewDate: decision.reviewDate, createdAt: decision.createdAt,
           reviewedAt: dateKey(decision.reviewedAt), outcome: typeof decision.outcome === "string" ? decision.outcome.slice(0, 4000) : "",
+        })).slice(-200);
+    }
+    if (Array.isArray(value.creativeSessions)) {
+      state.creativeSessions = value.creativeSessions.filter((session) => isRecord(session) && typeof session.id === "string"
+        && typeof session.challenge === "string" && dateKey(session.createdAt) && dateKey(session.incubateUntil))
+        .map((session) => ({
+          id: session.id.slice(0, 80), challenge: session.challenge.slice(0, 500), lens: typeof session.lens === "string" ? session.lens.slice(0, 80) : "",
+          ideas: typeof session.ideas === "string" ? session.ideas.slice(0, 8000) : "", selectedIdea: typeof session.selectedIdea === "string" ? session.selectedIdea.slice(0, 2000) : "",
+          experiment: typeof session.experiment === "string" ? session.experiment.slice(0, 2000) : "", incubateUntil: session.incubateUntil,
+          createdAt: session.createdAt, revisitedAt: dateKey(session.revisitedAt), reflection: typeof session.reflection === "string" ? session.reflection.slice(0, 4000) : "",
         })).slice(-200);
     }
     return state;
@@ -706,6 +725,8 @@ const MTC = (() => {
     state.decisions.push({
       id, title, reviewDate, createdAt: todayStr(), reviewedAt: null, outcome: "",
       context: trimAnswer(fields.context), options: trimAnswer(fields.options), criteria: trimAnswer(fields.criteria),
+      evidenceFor: trimAnswer(fields.evidenceFor), evidenceAgainst: trimAnswer(fields.evidenceAgainst),
+      baseRate: trimAnswer(fields.baseRate), confidence: boundedNumber(Number(fields.confidence), 0, 100, 50), surprise: trimAnswer(fields.surprise),
       decision: trimAnswer(fields.decision), preMortem: trimAnswer(fields.preMortem), indicators: trimAnswer(fields.indicators),
     });
     saveState(state);
@@ -726,6 +747,46 @@ const MTC = (() => {
     return state.decisions.filter((decision) => !decision.reviewedAt && decision.reviewDate <= today);
   }
 
+  function saveCreativeSession(state, fields) {
+    const challenge = trimAnswer(fields.challenge).slice(0, 500);
+    if (!challenge) throw new Error("Describe the challenge first");
+    const incubateUntil = dateKey(fields.incubateUntil);
+    if (!incubateUntil) throw new Error("Choose an incubation date");
+    const id = `idea-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const session = {
+      id, challenge, lens: trimAnswer(fields.lens).slice(0, 80), ideas: trimAnswer(fields.ideas),
+      selectedIdea: trimAnswer(fields.selectedIdea), experiment: trimAnswer(fields.experiment), incubateUntil,
+      createdAt: todayStr(), revisitedAt: null, reflection: "",
+    };
+    state.creativeSessions.push(session);
+    state.totalXp += 10;
+    saveState(state);
+    return session;
+  }
+
+  function dueCreativeSessions(state) {
+    const today = todayStr();
+    return state.creativeSessions.filter((session) => !session.revisitedAt && session.incubateUntil <= today);
+  }
+
+  function revisitCreativeSession(state, id, reflection) {
+    const session = state.creativeSessions.find((entry) => entry.id === id);
+    if (!session) throw new Error("Idea session not found");
+    session.reflection = trimAnswer(reflection);
+    session.revisitedAt = todayStr();
+    saveState(state);
+    return session;
+  }
+
+  function completePathLesson(state, pathId, lessonIndex) {
+    const key = `${String(pathId).slice(0, 60)}:${Math.max(0, Math.floor(Number(lessonIndex) || 0))}`;
+    if (state.pathProgress[key]) return false;
+    state.pathProgress[key] = true;
+    state.totalXp += 5;
+    saveState(state);
+    return true;
+  }
+
   function weeklyInsights(state) {
     const insights = [];
     const weak = weaknessProfile(state).find((item) => item.attempts > 0);
@@ -740,6 +801,8 @@ const MTC = (() => {
     const thisWeek = state.history.filter((entry) => isoWeekKey(new Date(entry.date + "T00:00:00")) === isoWeekKey());
     const activeDays = new Set(thisWeek.map((entry) => entry.date)).size;
     if (activeDays > 0) insights.push(`You practiced on ${activeDays} day${activeDays === 1 ? "" : "s"} this week. Consistency beats a perfect streak.`);
+    const creative = state.creativeSessions.filter((session) => session.createdAt >= todayStr(new Date(Date.now() - 7 * 86400000))).length;
+    if (creative) insights.push(`You ran ${creative} creativity session${creative === 1 ? "" : "s"} this week. Revisit your selected idea before generating a new one.`);
     return insights.slice(0, 3);
   }
 
@@ -774,6 +837,10 @@ const MTC = (() => {
     saveDecision,
     reviewDecision,
     dueDecisions,
+    saveCreativeSession,
+    dueCreativeSessions,
+    revisitCreativeSession,
+    completePathLesson,
     submitExercise,
     getCurrentBossBattle,
     getBossBattleDef,
