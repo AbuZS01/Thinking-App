@@ -124,6 +124,19 @@ function onboardingHTML() {
     <p>Daily exercises that train sharper reasoning. Your progress stays on this device.</p>
     <form data-onboard-form>
       <input type="text" name="playerName" placeholder="Your name" maxlength="40" autofocus />
+      <label class="subtle" for="focus">What do you want to think better about?</label>
+      <select id="focus" name="focus">
+        <option value="work">Work and leadership</option>
+        <option value="personal">Personal decisions</option>
+        <option value="study">Study and learning</option>
+        <option value="general" selected>Everyday reasoning</option>
+      </select>
+      <label class="subtle" for="session-length">What fits your day?</label>
+      <select id="session-length" name="sessionLength">
+        <option value="quick">5-minute reset</option>
+        <option value="standard" selected>15-minute session</option>
+        <option value="deep">Deep practice</option>
+      </select>
       <div class="field"><button class="btn" type="submit">Start</button></div>
     </form>
   </div>`;
@@ -139,6 +152,10 @@ function dashboardHTML() {
   const battleState = MTC.getCurrentBossBattle(STATE);
   const battle = MTC.getBossBattleDef(battleState.battleId);
   const weak = MTC.weaknessProfile(STATE).filter((w) => w.attempts > 0).slice(0, 5);
+  const dueDecisions = MTC.dueDecisions(STATE);
+  const insights = MTC.weeklyInsights(STATE);
+  const session = STATE.profile.sessionLength;
+  const sessionLabel = session === "quick" ? "5-minute reset" : session === "deep" ? "Deep practice" : "15-minute session";
 
   return `
   <div class="panel">
@@ -155,11 +172,11 @@ function dashboardHTML() {
   </div>
 
   <div class="grid">
-    <a class="panel card" href="#/quest">
+    <a class="panel card" href="#/quest/${session}">
       <span class="tag">Today</span>
       <h2>Daily Quest</h2>
-      <p class="subtle">${quest.completed.length} / ${quest.items.length} done</p>
-      <span class="cta">Continue &rarr;</span>
+      <p class="subtle">${sessionLabel} &middot; ${quest.completed.length} / ${quest.items.length} done</p>
+      <span class="cta">Start &rarr;</span>
     </a>
     <a class="panel card" href="#/boss">
       <span class="tag">This week</span>
@@ -187,6 +204,13 @@ function dashboardHTML() {
     </a>
   </div>
 
+  ${dueDecisions.length ? `<div class="panel"><span class="tag">Review due</span><h2>${dueDecisions.length} decision${dueDecisions.length === 1 ? "" : "s"} ready to learn from</h2><p class="subtle">Revisit your original reasoning before hindsight takes over.</p><a class="btn" href="#/decisions">Review decisions</a></div>` : ""}
+
+  <div class="panel">
+    <h2>This week, about your thinking</h2>
+    ${insights.length ? `<ul>${insights.map((insight) => `<li>${esc(insight)}</li>`).join("")}</ul>` : `<p class="subtle">Complete a few exercises and this space will turn your activity into personal insights.</p>`}
+  </div>
+
   <div class="panel">
     <h2>Weakness Radar</h2>
     ${weak.length === 0
@@ -201,6 +225,7 @@ function dashboardHTML() {
 
   <div class="grid tight">
     <a class="panel card" href="#/journal"><h2>Journal</h2><p class="subtle">${STATE.history.length} answer${STATE.history.length === 1 ? "" : "s"}</p><span class="cta">Open &rarr;</span></a>
+    <a class="panel card" href="#/decisions"><h2>Decision Log</h2><p class="subtle">Make a decision, then learn from it</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/toolbox"><h2>Toolbox</h2><p class="subtle">${MTC_TOOLBOX.length} thinking tools</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/frameworks"><h2>Frameworks</h2><p class="subtle">${MTC_FRAMEWORKS.length} thinking styles</p><span class="cta">Open &rarr;</span></a>
     <a class="panel card" href="#/report"><h2>Weekly Report</h2><p class="subtle">This week vs last</p><span class="cta">Open &rarr;</span></a>
@@ -216,15 +241,19 @@ const TYPE_LABELS = {
   calibration: "Calibration", review: "Review", workbench: "Workbench",
 };
 
-function questHTML() {
+function questHTML(mode = STATE.profile.sessionLength) {
   const quest = MTC.getOrCreateDailyQuest(STATE);
+  const shownItems = mode === "quick" ? quest.items.filter((item) => item.type === "warmup")
+    : mode === "standard" ? quest.items.filter((item) => item.core) : quest.items;
+  const lengthLabel = mode === "quick" ? "5-minute reset" : mode === "deep" ? "Deep practice" : "15-minute session";
   const hasCore = quest.items.some((i) => i.core);
   return `<div class="panel">
     <h1>Daily Quest</h1>
-    <p class="subtle">One of each type &middot; 20&ndash;30 min &middot; ${quest.completed.length}/${quest.items.length} done.${hasCore ? ` Short on time? Do the <span style="color:var(--accent)">&#9733; core</span> three.` : ""}</p>
+    <p class="subtle">${lengthLabel} &middot; ${shownItems.filter((item) => quest.completed.includes(item.exerciseId)).length}/${shownItems.length} shown complete.${hasCore && mode === "deep" ? ` Short on time? Do the <a href="#/quest/standard" style="color:var(--accent)">&#9733; core three</a>.` : ""}</p>
+    <div class="field"><a class="btn ghost" href="#/quest/quick">5-minute reset</a> <a class="btn ghost" href="#/quest/standard">15 minutes</a> <a class="btn ghost" href="#/quest/deep">Deep practice</a></div>
   </div>
   <div class="grid">
-    ${quest.items.map((item) => {
+    ${shownItems.map((item) => {
       const ex = MTC.getExercise(item.exerciseId);
       const done = quest.completed.includes(item.exerciseId);
       return `<a class="card ${done ? "done" : ""}" href="#/exercise/${ex.id}">
@@ -649,6 +678,66 @@ function workbenchHTML(toolId) {
   </div>`;
 }
 
+/* ---------- Decision records ---------- */
+
+function decisionsHTML() {
+  const due = MTC.dueDecisions(STATE);
+  const decisions = [...STATE.decisions].reverse();
+  return `<div class="panel">
+    <a class="crumb" href="#/dashboard">&larr; Dashboard</a>
+    <h1>Decision Log</h1>
+    <p class="subtle">Write down your reasoning before you know the outcome. Review it later to improve your judgment.</p>
+  </div>
+  ${due.length ? `<div class="panel"><h2>Ready for review</h2><p class="subtle">Compare what happened with what you expected—without rewriting history.</p>${due.map((decision) => `<a class="btn" href="#/decisions/${esc(decision.id)}">Review: ${esc(decision.title)}</a>`).join(" ")}</div>` : ""}
+  <div class="panel">
+    <h2>Record a decision</h2>
+    <form data-decision-form>
+      <label class="subtle" for="decision-title">What decision are you making?</label>
+      <input id="decision-title" name="title" maxlength="160" required placeholder="e.g. Whether to accept the new role" />
+      <label class="subtle" for="decision-context">Context and objective</label>
+      <textarea id="decision-context" name="context" placeholder="What matters here? What does success look like?"></textarea>
+      <label class="subtle" for="decision-options">Options</label>
+      <textarea id="decision-options" name="options" placeholder="List the real alternatives, including doing nothing."></textarea>
+      <label class="subtle" for="decision-criteria">Decision criteria and evidence</label>
+      <textarea id="decision-criteria" name="criteria" placeholder="What will you optimize for? What evidence supports each option?"></textarea>
+      <label class="subtle" for="decision-choice">Your decision</label>
+      <textarea id="decision-choice" name="decision" placeholder="Commit to one option and explain why."></textarea>
+      <label class="subtle" for="decision-premortem">Pre-mortem: if this goes badly, why?</label>
+      <textarea id="decision-premortem" name="preMortem" placeholder="Name likely failure modes."></textarea>
+      <label class="subtle" for="decision-indicators">Leading indicators to watch</label>
+      <textarea id="decision-indicators" name="indicators" placeholder="What will tell you early that you chose well or poorly?"></textarea>
+      <label class="subtle" for="decision-review-date">When will you review this?</label>
+      <input id="decision-review-date" name="reviewDate" type="date" min="${MTC.todayStr()}" required />
+      <div class="field"><button class="btn" type="submit">Save decision record</button></div>
+    </form>
+  </div>
+  ${decisions.length ? `<div class="panel"><h2>Past decisions</h2>${decisions.map((decision) => `<a class="card" href="#/decisions/${esc(decision.id)}"><span class="tag">${decision.reviewedAt ? "Reviewed" : `Review ${esc(decision.reviewDate)}`}</span><h2>${esc(decision.title)}</h2><p class="subtle">Decided ${esc(decision.createdAt)}</p></a>`).join("")}</div>` : ""}`;
+}
+
+function decisionDetailHTML(id) {
+  const decision = STATE.decisions.find((entry) => entry.id === id);
+  if (!decision) return `<div class="panel">Decision not found. <a class="btn" href="#/decisions">Decision Log</a></div>`;
+  const section = (label, value) => value ? `<div class="model-answer"><div class="lbl">${label}</div>${esc(value)}</div>` : "";
+  return `<div class="panel">
+    <a class="crumb" href="#/decisions">&larr; Decision Log</a>
+    <h1>${esc(decision.title)}</h1>
+    <p class="subtle">Recorded ${esc(decision.createdAt)} &middot; Review date ${esc(decision.reviewDate)}</p>
+  </div>
+  <div class="panel">
+    ${section("Context and objective", decision.context)}
+    ${section("Options", decision.options)}
+    ${section("Criteria and evidence", decision.criteria)}
+    ${section("Decision", decision.decision)}
+    ${section("Pre-mortem", decision.preMortem)}
+    ${section("Leading indicators", decision.indicators)}
+  </div>
+  ${decision.reviewedAt
+    ? `<div class="panel"><h2>Review</h2><p class="subtle">Reviewed ${esc(decision.reviewedAt)}</p><div class="journal-answer">${esc(decision.outcome) || "No outcome recorded."}</div></div>`
+    : decision.reviewDate <= MTC.todayStr()
+      ? `<div class="panel"><h2>What happened?</h2><p class="subtle">Compare the outcome with your original reasoning—especially the leading indicators and pre-mortem.</p><form data-decision-review="${esc(decision.id)}"><textarea name="outcome" placeholder="What happened? What did you get right or miss? What will you do differently next time?"></textarea><div class="field"><button class="btn" type="submit">Complete review</button></div></form></div>`
+      : `<div class="panel"><h2>Keep the record intact until review day</h2><p class="subtle">Your review opens on ${esc(decision.reviewDate)}. This preserves your original reasoning before hindsight takes over.</p></div>`}`;
+}
+
 /* ---------- Journal ---------- */
 
 function journalResultsHTML() {
@@ -669,7 +758,7 @@ function journalResultsHTML() {
     return `<div class="panel">
       <span class="pill">${TYPE_LABELS[h.type] || esc(h.type)}</span><span class="pill">${esc(h.date)}</span>
       <h2>${esc(title)}</h2>
-      <p class="subtle">${h.type === "workbench" ? `+${h.xp} XP` : `Self-assessed ${h.score}% &middot; +${h.xp} XP${h.hintsUsed ? ` &middot; ${h.hintsUsed} hint${h.hintsUsed === 1 ? "" : "s"} used` : ""}`}</p>
+      <p class="subtle">${h.type === "workbench" ? `+${esc(h.xp)} XP` : `Self-assessed ${esc(h.score)}% &middot; +${esc(h.xp)} XP${h.hintsUsed ? ` &middot; ${esc(h.hintsUsed)} hint${h.hintsUsed === 1 ? "" : "s"} used` : ""}`}</p>
       ${h.answer ? `<div class="journal-answer">${esc(h.answer)}</div>` : `<p class="subtle">(no written answer was saved with this entry)</p>`}
     </div>`;
   }).join("");
@@ -734,13 +823,15 @@ function render() {
   const r = route();
   let body;
   if (r === "dashboard") body = dashboardHTML();
-  else if (r === "quest") body = questHTML();
+  else if (r === "quest" || r.startsWith("quest/")) body = questHTML(r.split("/")[1]);
   else if (r.startsWith("exercise/")) body = exerciseHTML(r.split("/")[1]);
   else if (r === "boss") body = bossHTML();
   else if (r === "calibration") body = calibrationHTML();
   else if (r === "review") body = reviewHTML();
   else if (r === "report") body = reportHTML();
   else if (r === "journal") body = journalHTML();
+  else if (r === "decisions") body = decisionsHTML();
+  else if (r.startsWith("decisions/")) body = decisionDetailHTML(r.split("/")[1]);
   else if (r === "toolbox") body = toolboxHTML();
   else if (r.startsWith("workbench/")) body = workbenchHTML(r.split("/")[1]);
   else if (r === "frameworks") body = frameworksListHTML();
@@ -1063,10 +1154,32 @@ document.addEventListener("input", (e) => {
 document.addEventListener("submit", (e) => {
   if (e.target.matches("[data-onboard-form]")) {
     e.preventDefault();
-    const name = new FormData(e.target).get("playerName");
+    const form = new FormData(e.target);
+    const name = form.get("playerName");
     STATE.name = (name && name.trim()) || "Thinker";
+    STATE.profile = { focus: form.get("focus") || "general", sessionLength: form.get("sessionLength") || "standard" };
     MTC.saveState(STATE);
     render();
+    return;
+  }
+  if (e.target.matches("[data-decision-form]")) {
+    e.preventDefault();
+    try {
+      const saved = MTC.saveDecision(STATE, Object.fromEntries(new FormData(e.target)));
+      navigate(`decisions/${saved.id}`);
+    } catch (err) {
+      alert(err.message || "Unable to save this decision.");
+    }
+    return;
+  }
+  if (e.target.matches("[data-decision-review]")) {
+    e.preventDefault();
+    try {
+      MTC.reviewDecision(STATE, e.target.dataset.decisionReview, new FormData(e.target).get("outcome"));
+      render();
+    } catch (err) {
+      alert(err.message || "Unable to save this review.");
+    }
   }
 });
 

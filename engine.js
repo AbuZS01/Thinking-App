@@ -5,7 +5,12 @@ const MTC = (() => {
   const STORAGE_KEY = "mtc_state_v1";
 
   function todayStr(d = new Date()) {
-    return d.toISOString().slice(0, 10);
+    // Daily activity should follow the player's calendar day, not UTC. Using
+    // toISOString() made streaks and quests roll over early or late outside UTC.
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   }
 
   function isoWeekKey(d = new Date()) {
@@ -68,15 +73,152 @@ const MTC = (() => {
       history: [], // {date, exerciseId, type, score, xp, hintsUsed}
       dailyQuest: null, // {date, items: [{exerciseId, type}], completed: [exerciseId]}
       bossBattle: null, // {week, battleId, completed, stageNotes: []}
+      profile: { focus: "general", sessionLength: "standard" },
+      decisions: [], // {id, title, context, options, criteria, decision, preMortem, indicators, reviewDate, createdAt, reviewedAt, outcome}
     };
+  }
+
+  function isRecord(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function nonNegativeNumber(value, fallback = 0) {
+    return Number.isFinite(value) && value >= 0 ? value : fallback;
+  }
+
+  function boundedNumber(value, min, max, fallback = min) {
+    return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
+  }
+
+  function dateKey(value) {
+    return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+  }
+
+  function numberMap(value) {
+    if (!isRecord(value)) return {};
+    return Object.fromEntries(Object.entries(value)
+      .filter(([, n]) => Number.isFinite(n) && n >= 0)
+      .map(([key, n]) => [key, n]));
+  }
+
+  // All state may come from localStorage or an imported file, so normalize it
+  // before the UI consumes it. This also gives older progress files safe defaults.
+  function normalizeState(value) {
+    if (!isRecord(value)) throw new Error("Not a valid progress file");
+    const state = defaultState();
+    const exerciseTypes = new Set([...MTC_QUEST_TYPES, "boss", "calibration", "review", "workbench"]);
+    const exerciseIds = new Set(MTC_EXERCISES.map((e) => e.id));
+    const bossIds = new Set(MTC_BOSS_BATTLES.map((b) => b.id));
+    const frameworkIds = new Set(MTC_FRAMEWORKS.map((f) => f.id));
+    const reviewIds = new Set(reviewDeck().map((c) => c.id));
+
+    state.name = typeof value.name === "string" ? value.name.slice(0, 40) : null;
+    state.createdAt = typeof value.createdAt === "string" ? value.createdAt : state.createdAt;
+    state.totalXp = nonNegativeNumber(value.totalXp);
+    state.streak = Math.floor(nonNegativeNumber(value.streak));
+    state.lastActiveDate = dateKey(value.lastActiveDate);
+    state.totalExercises = Math.floor(nonNegativeNumber(value.totalExercises));
+    state.typeCounts = numberMap(value.typeCounts);
+    state.frameworkCounts = numberMap(value.frameworkCounts);
+    state.flags = numberMap(value.flags);
+    state.achievements = Array.isArray(value.achievements)
+      ? [...new Set(value.achievements.filter((id) => MTC_ACHIEVEMENTS.some((a) => a.id === id)))] : [];
+    state.bossBattlesCompleted = Math.floor(nonNegativeNumber(value.bossBattlesCompleted));
+    state.graceShields = Math.min(1, Math.floor(nonNegativeNumber(value.graceShields, 1)));
+    state.reviewCount = Math.floor(nonNegativeNumber(value.reviewCount));
+    state.trackXp = numberMap(value.trackXp);
+    if (isRecord(value.profile)) {
+      state.profile = {
+        focus: typeof value.profile.focus === "string" ? value.profile.focus.slice(0, 60) : "general",
+        sessionLength: ["quick", "standard", "deep"].includes(value.profile.sessionLength) ? value.profile.sessionLength : "standard",
+      };
+    }
+
+    if (isRecord(value.calibration)) {
+      state.calibration.asked = Array.isArray(value.calibration.asked)
+        ? value.calibration.asked.filter((id) => typeof id === "string").slice(-500) : [];
+      state.calibration.answers = Array.isArray(value.calibration.answers)
+        ? value.calibration.answers.filter((answer) => isRecord(answer) && dateKey(answer.date)
+          && (answer.kind === "binary" || answer.kind === "interval"))
+          .map((answer) => answer.kind === "binary"
+            ? { id: String(answer.id || ""), kind: "binary", correct: Boolean(answer.correct), confidence: boundedNumber(answer.confidence, 0, 100), date: answer.date }
+            : { id: String(answer.id || ""), kind: "interval", hit: Boolean(answer.hit), date: answer.date })
+          .slice(-500) : [];
+    }
+
+    if (isRecord(value.reviews)) {
+      for (const [id, rec] of Object.entries(value.reviews)) {
+        if (!reviewIds.has(id) || !isRecord(rec) || !dateKey(rec.due)) continue;
+        state.reviews[id] = {
+          ease: boundedNumber(rec.ease, 1.3, 5, 2.5),
+          interval: Math.floor(nonNegativeNumber(rec.interval)),
+          reps: Math.floor(nonNegativeNumber(rec.reps)),
+          due: rec.due,
+        };
+      }
+    }
+
+    if (isRecord(value.newIntro) && dateKey(value.newIntro.date)) {
+      state.newIntro = { date: value.newIntro.date, count: Math.floor(nonNegativeNumber(value.newIntro.count)) };
+    }
+    if (isRecord(value.weaknessScores)) {
+      for (const [id, score] of Object.entries(value.weaknessScores)) {
+        if (!frameworkIds.has(id) || !isRecord(score)) continue;
+        state.weaknessScores[id] = {
+          attempts: Math.floor(nonNegativeNumber(score.attempts)),
+          totalScore: nonNegativeNumber(score.totalScore),
+        };
+      }
+    }
+    if (Array.isArray(value.history)) {
+      state.history = value.history.filter((entry) => isRecord(entry) && dateKey(entry.date)
+        && typeof entry.exerciseId === "string" && typeof entry.type === "string" && exerciseTypes.has(entry.type))
+        .map((entry) => ({
+          date: entry.date,
+          exerciseId: entry.exerciseId.slice(0, 100),
+          type: entry.type,
+          score: boundedNumber(entry.score, 0, 100),
+          xp: nonNegativeNumber(entry.xp),
+          hintsUsed: Math.floor(nonNegativeNumber(entry.hintsUsed)),
+          answer: typeof entry.answer === "string" ? entry.answer.slice(0, 8000) : "",
+          ...(Number.isFinite(entry.confidence) ? { confidence: boundedNumber(entry.confidence, 0, 100) } : {}),
+        })).slice(-5000);
+    }
+    if (isRecord(value.dailyQuest) && dateKey(value.dailyQuest.date) && Array.isArray(value.dailyQuest.items)) {
+      const items = value.dailyQuest.items.filter((item) => isRecord(item) && exerciseIds.has(item.exerciseId)
+        && MTC_QUEST_TYPES.includes(item.type)).map((item) => ({ exerciseId: item.exerciseId, type: item.type, core: Boolean(item.core) }));
+      if (items.length === MTC_QUEST_TYPES.length) {
+        const validIds = new Set(items.map((item) => item.exerciseId));
+        state.dailyQuest = { date: value.dailyQuest.date, items,
+          completed: Array.isArray(value.dailyQuest.completed) ? value.dailyQuest.completed.filter((id) => validIds.has(id)) : [] };
+      }
+    }
+    if (isRecord(value.bossBattle) && typeof value.bossBattle.week === "string" && bossIds.has(value.bossBattle.battleId)) {
+      state.bossBattle = { week: value.bossBattle.week, battleId: value.bossBattle.battleId, completed: Boolean(value.bossBattle.completed) };
+    }
+    if (Array.isArray(value.decisions)) {
+      state.decisions = value.decisions.filter((decision) => isRecord(decision) && typeof decision.id === "string"
+        && typeof decision.title === "string" && dateKey(decision.createdAt) && dateKey(decision.reviewDate))
+        .map((decision) => ({
+          id: decision.id.slice(0, 80), title: decision.title.slice(0, 160),
+          context: typeof decision.context === "string" ? decision.context.slice(0, 4000) : "",
+          options: typeof decision.options === "string" ? decision.options.slice(0, 4000) : "",
+          criteria: typeof decision.criteria === "string" ? decision.criteria.slice(0, 4000) : "",
+          decision: typeof decision.decision === "string" ? decision.decision.slice(0, 4000) : "",
+          preMortem: typeof decision.preMortem === "string" ? decision.preMortem.slice(0, 4000) : "",
+          indicators: typeof decision.indicators === "string" ? decision.indicators.slice(0, 4000) : "",
+          reviewDate: decision.reviewDate, createdAt: decision.createdAt,
+          reviewedAt: dateKey(decision.reviewedAt), outcome: typeof decision.outcome === "string" ? decision.outcome.slice(0, 4000) : "",
+        })).slice(-200);
+    }
+    return state;
   }
 
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaultState();
-      const parsed = JSON.parse(raw);
-      return Object.assign(defaultState(), parsed);
+      return normalizeState(JSON.parse(raw));
     } catch (e) {
       return defaultState();
     }
@@ -326,10 +468,10 @@ const MTC = (() => {
 
   function importState(json) {
     const parsed = JSON.parse(json);
-    if (!parsed || typeof parsed !== "object" || typeof parsed.totalXp !== "number" || !Array.isArray(parsed.history)) {
+    if (!isRecord(parsed) || !Number.isFinite(parsed.totalXp) || !Array.isArray(parsed.history)) {
       throw new Error("Not a valid progress file");
     }
-    const state = Object.assign(defaultState(), parsed);
+    const state = normalizeState(parsed);
     saveState(state);
     return state;
   }
@@ -454,8 +596,8 @@ const MTC = (() => {
       rec.interval = rec.reps === 0 ? 2 : Math.round(Math.max(rec.interval, 1) * rec.ease * 1.3); rec.ease += 0.1; rec.reps++;
     }
     const d = new Date();
-    d.setUTCDate(d.getUTCDate() + rec.interval);
-    rec.due = d.toISOString().slice(0, 10);
+    d.setDate(d.getDate() + rec.interval);
+    rec.due = todayStr(d);
     state.reviews[cardId] = rec;
     state.reviewCount = (state.reviewCount || 0) + 1;
     saveState(state);
@@ -555,6 +697,52 @@ const MTC = (() => {
     };
   }
 
+  function saveDecision(state, fields) {
+    const title = trimAnswer(fields.title).slice(0, 160);
+    if (!title) throw new Error("A decision title is required");
+    const reviewDate = dateKey(fields.reviewDate);
+    if (!reviewDate) throw new Error("Choose a review date");
+    const id = `decision-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    state.decisions.push({
+      id, title, reviewDate, createdAt: todayStr(), reviewedAt: null, outcome: "",
+      context: trimAnswer(fields.context), options: trimAnswer(fields.options), criteria: trimAnswer(fields.criteria),
+      decision: trimAnswer(fields.decision), preMortem: trimAnswer(fields.preMortem), indicators: trimAnswer(fields.indicators),
+    });
+    saveState(state);
+    return state.decisions[state.decisions.length - 1];
+  }
+
+  function reviewDecision(state, id, outcome) {
+    const decision = state.decisions.find((entry) => entry.id === id);
+    if (!decision) throw new Error("Decision not found");
+    decision.outcome = trimAnswer(outcome);
+    decision.reviewedAt = todayStr();
+    saveState(state);
+    return decision;
+  }
+
+  function dueDecisions(state) {
+    const today = todayStr();
+    return state.decisions.filter((decision) => !decision.reviewedAt && decision.reviewDate <= today);
+  }
+
+  function weeklyInsights(state) {
+    const insights = [];
+    const weak = weaknessProfile(state).find((item) => item.attempts > 0);
+    if (weak) insights.push(`Practice ${weak.name}: your current average is ${Math.round(weak.avg)}% over ${weak.attempts} attempt${weak.attempts === 1 ? "" : "s"}.`);
+    const confidence = exerciseConfidenceGap(state);
+    if (confidence && confidence.n >= 3) insights.push(`Your pre-reveal confidence differs from rubric scores by ${confidence.gap}% on average. Use that gap to calibrate your certainty.`);
+    const calibration = calibrationStats(state);
+    if (calibration.binaryCount >= 5 && calibration.accuracy !== calibration.avgConfidence) {
+      const direction = calibration.avgConfidence > calibration.accuracy ? "higher" : "lower";
+      insights.push(`Your confidence is ${Math.abs(calibration.avgConfidence - calibration.accuracy)} points ${direction} than your accuracy.`);
+    }
+    const thisWeek = state.history.filter((entry) => isoWeekKey(new Date(entry.date + "T00:00:00")) === isoWeekKey());
+    const activeDays = new Set(thisWeek.map((entry) => entry.date)).size;
+    if (activeDays > 0) insights.push(`You practiced on ${activeDays} day${activeDays === 1 ? "" : "s"} this week. Consistency beats a perfect streak.`);
+    return insights.slice(0, 3);
+  }
+
   return {
     todayStr,
     deriveLevel,
@@ -582,6 +770,10 @@ const MTC = (() => {
     gradeReviewCard,
     finishReviewSession,
     weeklyReport,
+    weeklyInsights,
+    saveDecision,
+    reviewDecision,
+    dueDecisions,
     submitExercise,
     getCurrentBossBattle,
     getBossBattleDef,
