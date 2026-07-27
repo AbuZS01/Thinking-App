@@ -50,6 +50,14 @@ const PRACTICE_PATHS = [
     ["Search for disconfirmation", "What result would make you change your mind? Where could you look for it?"],
     ["Explain the mechanism", "Replace an outcome statement with a causal explanation: who does what differently, and why?"],
   ] },
+  { id: "reason", title: "Reasoning Quality", source: "Original practice inspired by Richard Paul and Linda Elder", lessons: [
+    ["State the real question", "Turn a vague concern into one specific question you are trying to answer. What is its purpose?"],
+    ["Surface assumptions", "Write three things you are taking for granted. How would your conclusion change if one were false?"],
+    ["Check the information", "Separate what you know directly, what someone told you, and what you inferred."],
+    ["Widen the viewpoint", "Describe the issue from the perspective of someone affected who disagrees with you."],
+    ["Trace consequences", "If your conclusion guides action, what are the important likely consequences—for you and for others?"],
+    ["Apply quality standards", "Review your reasoning: is it clear, accurate, relevant, sufficiently deep, broad enough, logical, and fair? Improve one weak spot."],
+  ] },
   { id: "create", title: "Creative Problem-Solving", source: "Inspired by lateral thinking and idea-generation practice", lessons: [
     ["Idea quota", "Choose a challenge and generate ten answers before evaluating any of them."],
     ["Forced connection", "Combine your challenge with a random object or industry. What new approach appears?"],
@@ -827,6 +835,20 @@ function decisionsHTML() {
   ${decisions.length ? `<div class="panel"><h2>Past decisions</h2>${decisions.map((decision) => `<a class="card" href="#/decisions/${esc(decision.id)}"><span class="tag">${decision.reviewedAt ? "Reviewed" : `Review ${esc(decision.reviewDate)}`}</span><h2>${esc(decision.title)}</h2><p class="subtle">Decided ${esc(decision.createdAt)}</p></a>`).join("")}</div>` : ""}`;
 }
 
+function reasoningQualityHTML(decision) {
+  const checks = [
+    ["Clear", decision.decision, "State the choice in one unambiguous sentence."],
+    ["Accurate", decision.evidenceFor, "Add concrete evidence, not only impressions."],
+    ["Relevant", decision.criteria, "Name the criteria that genuinely matter here."],
+    ["Broad", decision.evidenceAgainst, "Give the strongest reasonable case against your choice."],
+    ["Deep", decision.preMortem, "Consider the failure modes beneath the obvious answer."],
+    ["Logical", decision.baseRate, "Compare this with similar situations before inferring too much."],
+    ["Fair", decision.indicators, "Include who is affected and what signals would challenge your view."],
+  ];
+  const complete = checks.filter(([, value]) => value && value.trim()).length;
+  return `<div class="panel"><h2>Reasoning quality check</h2><p class="subtle">A practical check inspired by Paul and Elder's intellectual standards. ${complete}/${checks.length} dimensions have been made explicit.</p>${checks.map(([label, value, tip]) => `<div class="weak-row"><span class="name"><b>${label}</b><br/><span class="subtle">${esc(value && value.trim() ? "Addressed" : tip)}</span></span><span class="pill">${value && value.trim() ? "✓" : "Try"}</span></div>`).join("")}</div>`;
+}
+
 function decisionDetailHTML(id) {
   const decision = STATE.decisions.find((entry) => entry.id === id);
   if (!decision) return `<div class="panel">Decision not found. <a class="btn" href="#/decisions">Decision Log</a></div>`;
@@ -849,6 +871,7 @@ function decisionDetailHTML(id) {
     ${section("Pre-mortem", decision.preMortem)}
     ${section("Leading indicators", decision.indicators)}
   </div>
+  ${reasoningQualityHTML(decision)}
   ${decision.reviewedAt
     ? `<div class="panel"><h2>Review</h2><p class="subtle">Reviewed ${esc(decision.reviewedAt)}</p><div class="journal-answer">${esc(decision.outcome) || "No outcome recorded."}</div></div>`
     : decision.reviewDate <= MTC.todayStr()
